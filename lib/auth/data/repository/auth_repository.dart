@@ -1,0 +1,45 @@
+import 'package:jdolh_flutter/auth/data/datasource/remote_auth_datasource.dart';
+import 'package:jdolh_flutter/auth/domain/entities/user_exist.dart';
+import 'package:jdolh_flutter/auth/domain/entities/auth_result.dart';
+import 'package:dartz/dartz.dart';
+import 'package:jdolh_flutter/auth/domain/repository/base_auth_repository.dart';
+import 'package:jdolh_flutter/core/error/exceptions.dart';
+import 'package:jdolh_flutter/core/error/failure.dart';
+
+class AuthRepository extends BaseAuthRepository {
+  final BaseRemoteAuthDatasource baseRemoteAuthDatasource;
+
+  AuthRepository(this.baseRemoteAuthDatasource);
+  ///// user exist
+  @override
+  Future<Either<Failure, UserExist>> checkUserExist(String phoneNumber) async {
+    try {
+      final result = await baseRemoteAuthDatasource.checkUserExist(phoneNumber);
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.serverErrorModel.message, e.serverErrorModel.statusCode));
+    }
+  }
+
+///// login
+  @override
+  Future<Either<Failure, AuthResult>> login(String phoneNumber) async {
+    try {
+      final result = await baseRemoteAuthDatasource.login(phoneNumber);
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.serverErrorModel.message, e.serverErrorModel.statusCode));
+    }
+  }
+
+///// register
+  @override
+  Future<Either<Failure, AuthResult>> register(String phoneNumber, String fullName) async {
+    try {
+      final result = await baseRemoteAuthDatasource.register(phoneNumber, fullName);
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.serverErrorModel.message, e.serverErrorModel.statusCode));
+    }
+  }
+}
