@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:jdolh_flutter/auth/presentation/controller/auth_controller.dart';
 import 'package:jdolh_flutter/auth/presentation/screens/signin_screen.dart';
 import 'package:jdolh_flutter/core/services/service_locator.dart';
 import 'package:jdolh_flutter/core/utils/app_light_color.dart';
 import 'package:jdolh_flutter/core/utils/theme.dart';
+import 'package:jdolh_flutter/dashboard/presentation/screens/dashboard_screen.dart';
 import 'package:jdolh_flutter/firebase_options.dart';
 
 void main() async {
@@ -16,12 +18,13 @@ void main() async {
   );
   await GetStorage.init();
   ServiceLocator().init();
-  runApp(const App());
+  runApp(App());
 }
 
 ///// App /////z
 class App extends StatelessWidget {
-  const App({super.key});
+  App({super.key});
+  final AuthController authController = Get.put(AuthController(sl(), sl(), sl(), sl()));
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +36,7 @@ class App extends StatelessWidget {
     );
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SigninScreen(),
+      home: !authController.localAuthUsecases.readIsLogin() != true ? SigninScreen() : DashboardScreen(),
       theme: lightTheme,
       locale: const Locale("ar"),
       fallbackLocale: const Locale("ar"),

@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:jdolh_flutter/auth/presentation/controller/auth_controller.dart';
 import 'package:jdolh_flutter/auth/presentation/screens/signin_screen.dart';
 import 'package:jdolh_flutter/core/utils/app_light_color.dart';
 import 'package:jdolh_flutter/core/utils/global_utils.dart';
 
 class SignupScreen extends StatelessWidget {
   SignupScreen({super.key});
-  final loginForm = GlobalKey<FormState>();
+  final signupForm = GlobalKey<FormState>();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
+  final AuthController authController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +35,7 @@ class SignupScreen extends StatelessWidget {
                 line(60),
                 vertical(40),
                 Form(
-                  key: loginForm,
+                  key: signupForm,
                   child: Column(
                     children: [
                       TextFormField(
@@ -41,6 +44,15 @@ class SignupScreen extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 16,
                         ),
+                        onChanged: (value) {
+                          authController.fullName.value = value;
+                        },
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'الرجاء كتابة اسمك بالكامل';
+                          }
+                          return null;
+                        },
                         decoration: const InputDecoration(
                           prefixIcon: Icon(Ionicons.person_outline),
                           hintText: 'الإسم بالكامل',
@@ -50,12 +62,25 @@ class SignupScreen extends StatelessWidget {
                       TextFormField(
                         controller: phoneController,
                         keyboardType: TextInputType.phone,
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(10),
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
                         style: const TextStyle(
                           fontSize: 16,
                         ),
+                        onChanged: (value) {
+                          authController.phoneNumber.value = value;
+                        },
+                        validator: (value) {
+                          if (value!.length != 10) {
+                            return 'الرجاء كتابة 10 ارقام';
+                          }
+                          return null;
+                        },
                         decoration: InputDecoration(
                           prefixIcon: const Icon(Ionicons.phone_portrait_outline),
-                          hintText: 'رقم الجوال',
+                          hintText: 'رقم الجوال (05xxxxxxxx)',
                           suffixIcon: Container(
                             width: 110,
                             decoration: BoxDecoration(
@@ -87,8 +112,27 @@ class SignupScreen extends StatelessWidget {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () {},
-                          child: const Text('إنشاء'),
+                          onPressed: () {
+                            if (signupForm.currentState!.validate()) {
+                              authController.isLoginRequest.value = false;
+                              authController.checkUserExist(phoneNumber: phoneController.text, isLoginRequest: false);
+                            }
+                          },
+                          child: GetBuilder<AuthController>(
+                            builder: (controller) => controller.isLoading
+                                ? Center(
+                                    child: Container(
+                                      padding: const EdgeInsets.all(5),
+                                      width: 29,
+                                      height: 29,
+                                      child: const CircularProgressIndicator(
+                                        color: Colors.white,
+                                        strokeWidth: 2,
+                                      ),
+                                    ),
+                                  )
+                                : const Text('إنشاء'),
+                          ),
                         ),
                       )
                     ],

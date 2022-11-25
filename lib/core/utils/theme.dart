@@ -113,7 +113,7 @@ ThemeData lightTheme = ThemeData(
     isCollapsed: true,
     hintStyle: TextStyle(
       color: AppLightColor.subLabelColor,
-      fontSize: 15,
+      fontSize: 14,
       fontWeight: FontWeight.w400,
     ),
     prefixIconColor: AppLightColor.subLabelColor,
@@ -128,7 +128,11 @@ ThemeData lightTheme = ThemeData(
     ),
     errorBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(10),
-      borderSide: BorderSide(color: AppLightColor.redColor),
+      borderSide: BorderSide(color: AppLightColor.redColor.withOpacity(.1)),
+    ),
+    focusedErrorBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+      borderSide: BorderSide(color: AppLightColor.redColor.withOpacity(.1)),
     ),
   ),
 

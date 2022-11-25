@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:jdolh_flutter/auth/presentation/controller/auth_controller.dart';
 import 'package:jdolh_flutter/auth/presentation/screens/signup_screen.dart';
-import 'package:jdolh_flutter/core/services/service_locator.dart';
 import 'package:jdolh_flutter/core/utils/app_light_color.dart';
 import 'package:jdolh_flutter/core/utils/global_utils.dart';
 
@@ -12,7 +12,7 @@ class SigninScreen extends StatelessWidget {
   SigninScreen({super.key});
   final loginForm = GlobalKey<FormState>();
   final TextEditingController phoneController = TextEditingController();
-  final AuthController authController = Get.put(AuthController(sl(), sl(), sl(), sl()));
+  final AuthController authController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -40,21 +40,25 @@ class SigninScreen extends StatelessWidget {
                       TextFormField(
                         controller: phoneController,
                         keyboardType: TextInputType.phone,
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(10),
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
                         onChanged: (value) {
                           authController.phoneNumber.value = value;
                         },
-                        validator: ((value) {
+                        validator: (value) {
                           if (value!.length != 10) {
-                            return 'الرجاء ادخال رقم هاتف صالح';
+                            return 'الرجاء كتابة 10 ارقام';
                           }
                           return null;
-                        }),
+                        },
                         style: const TextStyle(
                           fontSize: 16,
                         ),
                         decoration: const InputDecoration(
                           prefixIcon: Icon(Ionicons.phone_portrait_outline),
-                          hintText: 'رقم الجوال الخاص بك',
+                          hintText: 'رقم الجوال (05xxxxxxxx)',
                         ),
                       ),
                       vertical(10),

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:jdolh_flutter/core/services/service_locator.dart';
 import 'package:jdolh_flutter/core/utils/app_light_color.dart';
 import 'package:jdolh_flutter/core/utils/global_utils.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -18,7 +17,7 @@ class PinScreen extends StatefulWidget {
 }
 
 class _PinScreenState extends State<PinScreen> {
-  final AuthController authController = Get.put(AuthController(sl(), sl(), sl(), sl()));
+  final AuthController authController = Get.find();
 
   final pinForm = GlobalKey<FormState>();
 

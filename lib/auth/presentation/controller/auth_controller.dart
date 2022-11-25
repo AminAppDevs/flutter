@@ -11,6 +11,7 @@ import 'package:jdolh_flutter/auth/presentation/screens/pin_screen.dart';
 import 'package:jdolh_flutter/core/error/failure.dart';
 import 'package:jdolh_flutter/core/utils/snackbar.dart';
 import 'package:jdolh_flutter/dashboard/presentation/screens/dashboard_screen.dart';
+import 'package:platform_device_id/platform_device_id.dart';
 
 class AuthController extends GetxController {
   final LoginUsecase loginUsecase;
@@ -38,7 +39,9 @@ class AuthController extends GetxController {
   login(String phoneNumber) async {
     isLoading = true;
     update();
-    Either<Failure, AuthResult> result = await loginUsecase(phoneNumber);
+    String? deviceId = await PlatformDeviceId.getDeviceId;
+    print('$deviceId bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb');
+    Either<Failure, AuthResult> result = await loginUsecase(phoneNumber, deviceId!);
     result.fold((Failure failure) {
       AppSnackbar.errorSnackbar(message: 'يوجد خطأ ما الرجاء المحاولة مرة آخرى');
       isLoading = false;
@@ -53,7 +56,26 @@ class AuthController extends GetxController {
     });
   }
 
-  register(String phoneNumber, String fullName) {}
+  ///// register
+  register(String phoneNumber, String fullName) async {
+    isLoading = true;
+    update();
+    String? deviceId = await PlatformDeviceId.getDeviceId;
+    print('$deviceId bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb');
+    Either<Failure, AuthResult> result = await registerUsecase(phoneNumber, fullName, deviceId!);
+    result.fold((Failure failure) {
+      AppSnackbar.errorSnackbar(message: 'يوجد خطأ ما الرجاء المحاولة مرة آخرى');
+      isLoading = false;
+      update();
+    }, (AuthResult authResult) {
+      isLoading = false;
+      update();
+      localAuthUsecases.writeIsLogin(true);
+      localAuthUsecases.writeUserId(authResult.userId);
+      localAuthUsecases.writeToken(authResult.token);
+      Get.to(() => DashboardScreen());
+    });
+  }
 
   ///// user exist
   checkUserExist({required String phoneNumber, required bool isLoginRequest}) async {
@@ -68,6 +90,7 @@ class AuthController extends GetxController {
     }, (UserExist userExist) {
       isLoading = false;
       update();
+      print(userExist);
       if (userExist.isExist) {
         if (isLoginRequest) {
           phoneAuthentication(phoneNumber.trim());
@@ -78,8 +101,7 @@ class AuthController extends GetxController {
         if (isLoginRequest) {
           AppSnackbar.errorSnackbar(message: 'لا يوجد حساب بهذا الرقم، ادخل الرقم الصحيح او انشئ حساب جديد');
         } else {
-          // ignore: avoid_print
-          print('register');
+          phoneAuthentication(phoneNumber.trim());
         }
       }
     });

@@ -8,7 +8,7 @@ class LoginUsecase {
 
   LoginUsecase(this.baseAuthRepository);
 
-  Future<Either<Failure, AuthResult>> call(String phoneNumber) async {
-    return await baseAuthRepository.login(phoneNumber);
+  Future<Either<Failure, AuthResult>> call(String phoneNumber, String deviceId) async {
+    return await baseAuthRepository.login(phoneNumber, deviceId);
   }
 }

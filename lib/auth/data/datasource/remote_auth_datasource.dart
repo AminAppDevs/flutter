@@ -8,20 +8,20 @@ import 'package:jdolh_flutter/core/error/server_error_model.dart';
 import 'package:jdolh_flutter/core/utils/api_config.dart';
 
 abstract class BaseRemoteAuthDatasource {
-  Future<AuthResultModel> login(String phoneNumber);
-  Future<AuthResultModel> register(String phoneNumber, String fullName);
+  Future<AuthResultModel> login(String phoneNumber, {String deviceId = ''});
+  Future<AuthResultModel> register(String phoneNumber, String fullName, {String deviceId = ''});
   Future<UserExistModel> checkUserExist(String phoneNumber);
 }
 
 class RemoteAuthDatasource extends BaseRemoteAuthDatasource {
   ///// login
   @override
-  Future<AuthResultModel> login(String phoneNumber) async {
+  Future<AuthResultModel> login(String phoneNumber, {String deviceId = ''}) async {
     const String url = '${ApiConfig.baseUrl}${ApiConfig.login}';
 
     http.Response response = await http.post(
       Uri.parse(url),
-      body: {"phoneNumber": phoneNumber},
+      body: {"phoneNumber": phoneNumber, "deviceId": deviceId},
     );
     if (response.statusCode == 201) {
       AuthResultModel authResult = AuthResultModel.fromJson(jsonDecode(response.body));
@@ -33,11 +33,11 @@ class RemoteAuthDatasource extends BaseRemoteAuthDatasource {
 
 ///// register
   @override
-  Future<AuthResultModel> register(String phoneNumber, String fullName) async {
+  Future<AuthResultModel> register(String phoneNumber, String fullName, {String deviceId = ''}) async {
     const String url = '${ApiConfig.baseUrl}${ApiConfig.register}';
     http.Response response = await http.post(
       Uri.parse(url),
-      body: {"fullName": fullName, "phoneNumber": phoneNumber},
+      body: {"fullName": fullName, "phoneNumber": phoneNumber, "deviceId": deviceId},
     );
     if (response.statusCode == 201) {
       AuthResultModel authResult = AuthResultModel.fromJson(jsonDecode(response.body));

@@ -17,7 +17,7 @@ class LocalAuthDatasource extends BaseLocalAuthDatasource {
   }
 
   @override
-  bool readIsLogin() => box.read('isLogin')!;
+  bool readIsLogin() => box.read('isLogin') ?? false;
 
   @override
   void writeUserId(int id) {
@@ -25,7 +25,7 @@ class LocalAuthDatasource extends BaseLocalAuthDatasource {
   }
 
   @override
-  int readUserId() => box.read('userId');
+  int readUserId() => box.read('userId') ?? 0;
 
   @override
   void writeToken(String token) {
@@ -33,5 +33,5 @@ class LocalAuthDatasource extends BaseLocalAuthDatasource {
   }
 
   @override
-  String readToken() => box.read('token');
+  String readToken() => box.read('token') ?? '';
 }

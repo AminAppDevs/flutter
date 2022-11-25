@@ -25,9 +25,9 @@ class AuthRepository extends BaseAuthRepository {
 
 ///// login
   @override
-  Future<Either<Failure, AuthResult>> login(String phoneNumber) async {
+  Future<Either<Failure, AuthResult>> login(String phoneNumber, String deviceId) async {
     try {
-      final result = await baseRemoteAuthDatasource.login(phoneNumber);
+      final result = await baseRemoteAuthDatasource.login(phoneNumber, deviceId: deviceId);
       return Right(result);
     } on ServerException catch (e) {
       return Left(ServerFailure(e.serverErrorModel.message, e.serverErrorModel.statusCode));
@@ -36,9 +36,9 @@ class AuthRepository extends BaseAuthRepository {
 
 ///// register
   @override
-  Future<Either<Failure, AuthResult>> register(String phoneNumber, String fullName) async {
+  Future<Either<Failure, AuthResult>> register(String phoneNumber, String fullName, String deviceId) async {
     try {
-      final result = await baseRemoteAuthDatasource.register(phoneNumber, fullName);
+      final result = await baseRemoteAuthDatasource.register(phoneNumber, fullName, deviceId: deviceId);
       return Right(result);
     } on ServerException catch (e) {
       return Left(ServerFailure(e.serverErrorModel.message, e.serverErrorModel.statusCode));

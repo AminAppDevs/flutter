@@ -8,7 +8,7 @@ class RegisterUsecase {
 
   RegisterUsecase(this.baseAuthRepository);
 
-  Future<Either<Failure, AuthResult>> call(String phoneNumber, String fullName) async {
-    return await baseAuthRepository.register(phoneNumber, fullName);
+  Future<Either<Failure, AuthResult>> call(String phoneNumber, String fullName, String deviceId) async {
+    return await baseAuthRepository.register(phoneNumber, fullName, deviceId);
   }
 }

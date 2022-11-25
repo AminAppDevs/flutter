@@ -5,8 +5,8 @@ import 'package:jdolh_flutter/core/error/failure.dart';
 
 abstract class BaseAuthRepository {
   ///// remote
-  Future<Either<Failure, AuthResult>> login(String phoneNumber);
-  Future<Either<Failure, AuthResult>> register(String phoneNumber, String fullName);
+  Future<Either<Failure, AuthResult>> login(String phoneNumber, String deviceId);
+  Future<Either<Failure, AuthResult>> register(String phoneNumber, String fullName, String deviceId);
   Future<Either<Failure, UserExist>> checkUserExist(String phoneNumber);
 
   ///// local
