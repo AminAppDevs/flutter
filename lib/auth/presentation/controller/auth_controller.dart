@@ -40,7 +40,6 @@ class AuthController extends GetxController {
     isLoading = true;
     update();
     String? deviceId = await PlatformDeviceId.getDeviceId;
-    print('$deviceId bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb');
     Either<Failure, AuthResult> result = await loginUsecase(phoneNumber, deviceId!);
     result.fold((Failure failure) {
       AppSnackbar.errorSnackbar(message: 'يوجد خطأ ما الرجاء المحاولة مرة آخرى');
@@ -52,7 +51,7 @@ class AuthController extends GetxController {
       localAuthUsecases.writeIsLogin(true);
       localAuthUsecases.writeUserId(authResult.userId);
       localAuthUsecases.writeToken(authResult.token);
-      Get.to(() => DashboardScreen());
+      Get.offAll(() => DashboardScreen());
     });
   }
 
@@ -61,7 +60,6 @@ class AuthController extends GetxController {
     isLoading = true;
     update();
     String? deviceId = await PlatformDeviceId.getDeviceId;
-    print('$deviceId bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb');
     Either<Failure, AuthResult> result = await registerUsecase(phoneNumber, fullName, deviceId!);
     result.fold((Failure failure) {
       AppSnackbar.errorSnackbar(message: 'يوجد خطأ ما الرجاء المحاولة مرة آخرى');
@@ -73,7 +71,7 @@ class AuthController extends GetxController {
       localAuthUsecases.writeIsLogin(true);
       localAuthUsecases.writeUserId(authResult.userId);
       localAuthUsecases.writeToken(authResult.token);
-      Get.to(() => DashboardScreen());
+      Get.offAll(() => DashboardScreen());
     });
   }
 
