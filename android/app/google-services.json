@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "602642469151",
+    "project_id": "jdolh-app",
+    "storage_bucket": "jdolh-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:602642469151:android:9dc26d7b54ef955d89202a",
+        "android_client_info": {
+          "package_name": "com.app.jdolh.sa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "602642469151-aagd7sr03edo2hcmfnnathiea26cr15l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBfIeMzSsi8lXlh9wu-dI96fG1XsWSpa0s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "602642469151-aagd7sr03edo2hcmfnnathiea26cr15l.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "602642469151-6e5ujp87ads549jits824qsapmhm6fdg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.jdolhFlutter"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

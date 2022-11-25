@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.jdolh_flutter">
+    package="com.app.jdolh.sa">
    <application
         android:label="jdolh_flutter"
         android:name="${applicationName}"

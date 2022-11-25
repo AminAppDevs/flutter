@@ -1,5 +1,5 @@
 class ApiConfig {
-  static const String baseUrl = 'http://192.168.43.156:3000';
+  static const String baseUrl = 'http://192.168.8.3:3000';
   ///// auth /////
   static const String userExist = '/auth/user';
   static const String login = '/auth/user/login';

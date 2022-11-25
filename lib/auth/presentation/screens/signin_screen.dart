@@ -12,7 +12,7 @@ class SigninScreen extends StatelessWidget {
   SigninScreen({super.key});
   final loginForm = GlobalKey<FormState>();
   final TextEditingController phoneController = TextEditingController();
-  final AuthController authController = Get.put(AuthController(sl(), sl(), sl()));
+  final AuthController authController = Get.put(AuthController(sl(), sl(), sl(), sl()));
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class SigninScreen extends StatelessWidget {
                         controller: phoneController,
                         keyboardType: TextInputType.phone,
                         onChanged: (value) {
-                          authController.phoneNumber = value;
+                          authController.phoneNumber.value = value;
                         },
                         validator: ((value) {
                           if (value!.length != 10) {
@@ -65,6 +65,7 @@ class SigninScreen extends StatelessWidget {
                             onPressed: () {
                               if (loginForm.currentState!.validate()) {
                                 authController.checkUserExist(phoneNumber: phoneController.text, isLoginRequest: true);
+                                authController.isLoginRequest.value = true;
                               }
                             },
                             child: controller.isLoading

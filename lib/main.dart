@@ -1,12 +1,20 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:jdolh_flutter/auth/presentation/screens/signin_screen.dart';
 import 'package:jdolh_flutter/core/services/service_locator.dart';
 import 'package:jdolh_flutter/core/utils/app_light_color.dart';
 import 'package:jdolh_flutter/core/utils/theme.dart';
+import 'package:jdolh_flutter/firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await GetStorage.init();
   ServiceLocator().init();
   runApp(const App());
 }
