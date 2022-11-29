@@ -40,7 +40,7 @@ class RemoteAccountDatasource extends BaseRemoteAccountDataSource {
     final String url = '${ApiConfig.baseUrl}${ApiConfig.getUserGroups}/$userId';
     http.Response response = await http.get(Uri.parse(url), headers: {'Authorization': 'Bearer $token'});
     if (response.statusCode == 200) {
-      return (jsonDecode(response.body) as List).map((e) => GroupModel.fromJson(jsonDecode(e))).toList();
+      return (jsonDecode(response.body) as List).map((e) => GroupModel.fromJson(e)).toList();
     } else {
       throw ServerException(ServerErrorModel.fromJson(jsonDecode(response.body)));
     }
@@ -151,7 +151,7 @@ class RemoteAccountDatasource extends BaseRemoteAccountDataSource {
       headers: {'Authorization': 'Bearer $token'},
     );
     if (response.statusCode == 200) {
-      return (jsonDecode(response.body) as List).map((e) => UserModel.fromJson(jsonDecode(e))).toList();
+      return (jsonDecode(response.body) as List).map((e) => UserModel.fromJson(e)).toList();
     } else {
       throw ServerException(ServerErrorModel.fromJson(jsonDecode(response.body)));
     }
@@ -166,7 +166,7 @@ class RemoteAccountDatasource extends BaseRemoteAccountDataSource {
       headers: {'Authorization': 'Bearer $token'},
     );
     if (response.statusCode == 200) {
-      return (jsonDecode(response.body) as List).map((e) => UserModel.fromJson(jsonDecode(e))).toList();
+      return (jsonDecode(response.body) as List).map((e) => UserModel.fromJson(e)).toList();
     } else {
       throw ServerException(ServerErrorModel.fromJson(jsonDecode(response.body)));
     }
@@ -182,7 +182,7 @@ class RemoteAccountDatasource extends BaseRemoteAccountDataSource {
       headers: {'Authorization': 'Bearer $token'},
     );
     if (response.statusCode == 200) {
-      return (jsonDecode(response.body) as List).map((e) => UserModel.fromJson(jsonDecode(e))).toList();
+      return (jsonDecode(response.body) as List).map((e) => UserModel.fromJson(e)).toList();
     } else {
       throw ServerException(ServerErrorModel.fromJson(jsonDecode(response.body)));
     }

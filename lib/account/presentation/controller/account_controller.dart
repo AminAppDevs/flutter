@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:get/get.dart';
+import 'package:jdolh_flutter/account/domain/entities/user.dart';
 import 'package:jdolh_flutter/account/domain/entities/user_details.dart';
 import 'package:jdolh_flutter/account/domain/usecases/account_usecases.dart';
 import 'package:jdolh_flutter/auth/presentation/controller/auth_controller.dart';
@@ -48,7 +49,12 @@ class AccountController extends GetxController {
 
   ///// properites
   bool isUserDetailsLoading = false;
+  bool isFollowersFollowingLoading = false;
   UserDetails? userDetails;
+  List<User> followers = [];
+  List<User> following = [];
+  List<User> followersSearchResult = [];
+  List<User> followingsSearchResult = [];
 
   ///// methods
   ///get user details
@@ -70,5 +76,70 @@ class AccountController extends GetxController {
         print(userDetails);
       },
     );
+  }
+
+  ///// update avatar
+
+  ///// get user followers
+  getUserFollowers() async {
+    isFollowersFollowingLoading = true;
+    update();
+    Either<Failure, List<User>> result = await getUserFollowersUsecase(userId);
+    result.fold(
+      (Failure failure) {
+        isFollowersFollowingLoading = false;
+        update();
+        AppSnackbar.errorSnackbar(message: 'يوجد خطأ ما الرجاء المحاولة مرة آخرى');
+      },
+      (List<User> followers) {
+        isFollowersFollowingLoading = false;
+        this.followers = followers;
+        followersSearchResult = followers;
+        update();
+      },
+    );
+  }
+
+  ///// get user following
+  getUserFollowing() async {
+    Either<Failure, List<User>> result = await getUserFollowingUsecase(userId);
+    result.fold(
+      (Failure failure) {
+        isFollowersFollowingLoading = false;
+        update();
+        AppSnackbar.errorSnackbar(message: 'يوجد خطأ ما الرجاء المحاولة مرة آخرى');
+      },
+      (List<User> following) {
+        isFollowersFollowingLoading = false;
+        this.following = following;
+        followingsSearchResult = following;
+        update();
+      },
+    );
+  }
+
+  ///// search in followers and following
+  searchFollowersFollowing(String term, bool isFollowers) {
+    if (isFollowers) {
+      if (term == '') {
+        followersSearchResult = followers;
+        update();
+      } else {
+        followersSearchResult = followers.where((User item) {
+          return item.fullName.contains(term) || item.phoneNumber.contains(term);
+        }).toList();
+        update();
+      }
+    } else {
+      if (term == '') {
+        followingsSearchResult = following;
+        update();
+      } else {
+        followingsSearchResult = following.where((User item) {
+          return item.fullName.contains(term) || item.phoneNumber.contains(term);
+        }).toList();
+        update();
+      }
+    }
   }
 }
