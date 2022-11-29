@@ -1,4 +1,9 @@
 import 'package:get_it/get_it.dart';
+import 'package:jdolh_flutter/account/data/datasource/base_remote_account_datasource.dart';
+import 'package:jdolh_flutter/account/data/datasource/remote_account_datasource.dart';
+import 'package:jdolh_flutter/account/data/repository/account_repository.dart';
+import 'package:jdolh_flutter/account/domain/repository/base_account_repository.dart';
+import 'package:jdolh_flutter/account/domain/usecases/account_usecases.dart';
 import 'package:jdolh_flutter/auth/data/datasource/local_auth_datasource.dart';
 import 'package:jdolh_flutter/auth/data/datasource/remote_auth_datasource.dart';
 import 'package:jdolh_flutter/auth/data/repository/auth_repository.dart';
@@ -20,5 +25,21 @@ class ServiceLocator {
     sl.registerLazySingleton(() => RegisterUsecase(sl()));
     sl.registerLazySingleton(() => UserExistUsecase(sl()));
     sl.registerLazySingleton(() => LocalAuthUsecases(sl()));
+
+    /// account
+    sl.registerLazySingleton<BaseRemoteAccountDataSource>(() => RemoteAccountDatasource());
+    sl.registerLazySingleton<BaseAccountRepository>(() => AccountRepository(sl()));
+    sl.registerLazySingleton(() => GetUserDetailsUsecase(sl()));
+    sl.registerLazySingleton(() => UpdateUserAvatarUsecase(sl()));
+    sl.registerLazySingleton(() => MakeFollowUnfollowUsecase(sl()));
+    sl.registerLazySingleton(() => GetUserFollowersUsecase(sl()));
+    sl.registerLazySingleton(() => GetUserFollowingUsecase(sl()));
+    sl.registerLazySingleton(() => SyncUserPhoneContactsUsecase(sl()));
+    sl.registerLazySingleton(() => GetUserGroupsUsecase(sl()));
+    sl.registerLazySingleton(() => updateGroupUsecase(sl()));
+    sl.registerLazySingleton(() => AddUserToGroupUsecase(sl()));
+    sl.registerLazySingleton(() => RemoveUserFromGroupUsecase(sl()));
+    sl.registerLazySingleton(() => DeleteGroupUsecase(sl()));
+    sl.registerLazySingleton(() => CreateGroupUsecase(sl()));
   }
 }

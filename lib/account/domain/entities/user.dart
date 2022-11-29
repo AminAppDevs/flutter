@@ -1,11 +1,11 @@
 import 'package:equatable/equatable.dart';
-import 'package:jdolh_flutter/account/domain/entities/user_details.dart';
+import 'package:jdolh_flutter/account/domain/entities/image.dart';
 
 class User extends Equatable {
   final int id;
   final String fullName;
   final String phoneNumber;
-  final Image avatar;
+  final AppImage avatar;
 
   const User(this.id, this.fullName, this.phoneNumber, this.avatar);
   @override
