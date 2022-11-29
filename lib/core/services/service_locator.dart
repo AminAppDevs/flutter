@@ -36,7 +36,7 @@ class ServiceLocator {
     sl.registerLazySingleton(() => GetUserFollowingUsecase(sl()));
     sl.registerLazySingleton(() => SyncUserPhoneContactsUsecase(sl()));
     sl.registerLazySingleton(() => GetUserGroupsUsecase(sl()));
-    sl.registerLazySingleton(() => updateGroupUsecase(sl()));
+    sl.registerLazySingleton(() => UpdateGroupUsecase(sl()));
     sl.registerLazySingleton(() => AddUserToGroupUsecase(sl()));
     sl.registerLazySingleton(() => RemoveUserFromGroupUsecase(sl()));
     sl.registerLazySingleton(() => DeleteGroupUsecase(sl()));

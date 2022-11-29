@@ -10,4 +10,7 @@ class AppLightColor {
   static HexColor labelColor = HexColor('#9490AD');
   static HexColor subLabelColor = HexColor('#B1ADCB');
   static HexColor inputBgColor = HexColor('#F8F8FB');
+  static HexColor accountFollowerBg = HexColor('#5BD3BE');
+  static HexColor accountFollowingBg = HexColor('#E5AE5A');
+  static HexColor accountInviteBg = HexColor('#FF8989');
 }

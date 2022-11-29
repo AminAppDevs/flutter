@@ -109,6 +109,7 @@ class AuthController extends GetxController {
   Future<void> phoneAuthentication(String phoneNumber) async {
     isLoading = true;
     update();
+    print('phone verification begin');
     await auth.verifyPhoneNumber(
       phoneNumber: '+966$phoneNumber',
       verificationCompleted: (credential) async {

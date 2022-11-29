@@ -87,9 +87,9 @@ class CreateGroupUsecase {
 }
 
 ////// update group
-class updateGroupUsecase {
+class UpdateGroupUsecase {
   final BaseAccountRepository baseAccountRepository;
-  const updateGroupUsecase(this.baseAccountRepository);
+  const UpdateGroupUsecase(this.baseAccountRepository);
 
   Future<Either<Failure, Group>> call(int groupId, String name) async {
     return await baseAccountRepository.updateGroup(groupId, name);

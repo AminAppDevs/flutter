@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:jdolh_flutter/account/presentation/screens/account_screen.dart';
 import 'package:jdolh_flutter/auth/presentation/controller/auth_controller.dart';
 import 'package:jdolh_flutter/auth/presentation/screens/signin_screen.dart';
 import 'package:jdolh_flutter/core/services/service_locator.dart';
@@ -36,7 +37,7 @@ class App extends StatelessWidget {
     );
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: authController.localAuthUsecases.readIsLogin() != true ? SigninScreen() : DashboardScreen(),
+      home: authController.localAuthUsecases.readIsLogin() != true ? SigninScreen() : AccountScreen(),
       theme: lightTheme,
       locale: const Locale("ar"),
       fallbackLocale: const Locale("ar"),
