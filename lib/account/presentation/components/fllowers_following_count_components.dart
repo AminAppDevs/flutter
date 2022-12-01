@@ -29,6 +29,7 @@ class FollowersFollowingCountComponent extends StatelessWidget {
                   color: AppLightColor.accountFollowerBg,
                   onTap: () {
                     accountController.getUserFollowers();
+                    accountController.isSearchActive = false;
                     Get.to(() => FollowersScreen());
                   },
                 ),
@@ -42,6 +43,7 @@ class FollowersFollowingCountComponent extends StatelessWidget {
                   color: AppLightColor.accountFollowingBg,
                   onTap: () {
                     accountController.getUserFollowing();
+                    accountController.isSearchActive = false;
                     Get.to(() => FollowingScreen());
                   },
                 ),
@@ -69,28 +71,30 @@ class FollowersFollowingCountComponent extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child: Container(
-          padding: const EdgeInsets.all(15),
+          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 3),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
             color: color,
           ),
           child: Column(
             children: [
-              SvgPicture.asset(icon, height: 20),
-              vertical(5),
+              SvgPicture.asset(icon, height: 22),
+              vertical(3),
               Text(
                 count.toString(),
+                maxLines: 1,
                 style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                       color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 18,
                       height: 1.5,
                     ),
               ),
               Text(
                 text,
-                style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                      color: Colors.white,
-                      height: 1,
-                    ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.labelLarge!.copyWith(color: Colors.white, fontSize: 12, height: 1),
               ),
             ],
           ),

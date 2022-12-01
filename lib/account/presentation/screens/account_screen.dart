@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:jdolh_flutter/account/presentation/components/account_options_component.dart';
 import 'package:jdolh_flutter/account/presentation/components/fllowers_following_count_components.dart';
 import 'package:jdolh_flutter/account/presentation/components/user_avatar_component.dart';
@@ -15,15 +14,6 @@ class AccountScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('حسابي'),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Ionicons.search),
-          ),
-        ],
-      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
@@ -31,12 +21,13 @@ class AccountScreen extends StatelessWidget {
             width: double.infinity,
             child: Column(
               children: [
+                vertical(10),
                 UserAvatarComponent(),
                 vertical(20),
 
                 /// followers following
                 FollowersFollowingCountComponent(),
-                vertical(20),
+                vertical(10),
 
                 /// options list
                 AccountOptionsComponent(),

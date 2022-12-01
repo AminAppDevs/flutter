@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:jdolh_flutter/account/domain/entities/group.dart';
 import 'package:jdolh_flutter/account/domain/entities/success.dart';
 import 'package:jdolh_flutter/account/domain/entities/user.dart';
@@ -21,8 +22,8 @@ class UpdateUserAvatarUsecase {
   final BaseAccountRepository baseAccountRepository;
   const UpdateUserAvatarUsecase(this.baseAccountRepository);
 
-  Future<Either<Failure, Success>> call(int userId) async {
-    return await baseAccountRepository.updateUserAvatar(userId);
+  Future<Either<Failure, Success>> call(XFile file, int userId) async {
+    return await baseAccountRepository.updateUserAvatar(file, userId);
   }
 }
 

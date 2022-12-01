@@ -14,10 +14,20 @@ class FollowingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(centerTitle: true, title: Text('تتابعه')),
-      body: GetBuilder<AccountController>(
-        builder: (controller) => controller.isFollowersFollowingLoading
+    return GetBuilder<AccountController>(
+      builder: (controller) => Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text('تتابعه'),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  accountController.changeSearchActiveStatus();
+                },
+                icon: Icon(accountController.isSearchActive ? Ionicons.close : Ionicons.search))
+          ],
+        ),
+        body: controller.isFollowersFollowingLoading
             ? Center(
                 child: SizedBox(
                   width: 25,
@@ -28,27 +38,32 @@ class FollowingScreen extends StatelessWidget {
                   ),
                 ),
               )
-            : controller.following.isEmpty
+            : controller.followers.isEmpty
                 ? Center(
                     child: Text('لا يوجد متابعون'),
                   )
                 : Column(
                     children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
-                        color: Colors.white,
-                        child: TextFormField(
-                          keyboardType: TextInputType.text,
-                          onChanged: (value) {
-                            accountController.searchFollowersFollowing(value, false);
-                          },
-                          decoration: InputDecoration(
-                            prefixIcon: Icon(Ionicons.search),
-                            hintText: 'بحث بالاسم أو رقم الجوال',
-                          ),
+                      if (accountController.isSearchActive)
+                        Column(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
+                              color: Colors.white,
+                              child: TextFormField(
+                                keyboardType: TextInputType.text,
+                                onChanged: (value) {
+                                  accountController.searchFollowersFollowing(value, false);
+                                },
+                                decoration: InputDecoration(
+                                  prefixIcon: Icon(Ionicons.search),
+                                  hintText: 'بحث بالاسم أو رقم الجوال',
+                                ),
+                              ),
+                            ),
+                            Divider(height: 0),
+                          ],
                         ),
-                      ),
-                      Divider(height: 0),
                       vertical(5),
                       Expanded(
                         child: ListView.builder(

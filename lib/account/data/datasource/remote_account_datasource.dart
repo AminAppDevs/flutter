@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:image_picker/image_picker.dart';
 import 'package:jdolh_flutter/account/data/datasource/base_remote_account_datasource.dart';
 import 'package:jdolh_flutter/account/data/model/user_model.dart';
 import 'package:jdolh_flutter/account/data/model/user_details_model.dart';
@@ -29,8 +31,25 @@ class RemoteAccountDatasource extends BaseRemoteAccountDataSource {
 
   /// update user avatar
   @override
-  Future<SuccessModel> updateUserAvatar(int userId) async {
-    throw UnimplementedError();
+  Future<SuccessModel> updateUserAvatar(XFile? file, int userId) async {
+    final String url = '${ApiConfig.baseUrl}${ApiConfig.updateUserAvatar}/$userId';
+    http.MultipartRequest request = http.MultipartRequest(
+      'POST',
+      Uri.parse(url),
+    );
+    Map<String, String> headers = {'Authorization': 'Bearer $token'};
+    request.headers.addAll(headers);
+    request.files.add(
+        http.MultipartFile('file', File(file!.path).readAsBytes().asStream(), File(file.path).lengthSync(), filename: file.path.split("/").last));
+    http.StreamedResponse response = await request.send();
+    http.Response result = await http.Response.fromStream(response);
+    if (result.statusCode == 201) {
+      print(result.body);
+      return SuccessModel.fromJson(jsonDecode(result.body));
+    } else {
+      print(result.body);
+      throw ServerException(ServerErrorModel.fromJson(jsonDecode(result.body)));
+    }
   }
 
 ///// groups
@@ -40,6 +59,7 @@ class RemoteAccountDatasource extends BaseRemoteAccountDataSource {
     final String url = '${ApiConfig.baseUrl}${ApiConfig.getUserGroups}/$userId';
     http.Response response = await http.get(Uri.parse(url), headers: {'Authorization': 'Bearer $token'});
     if (response.statusCode == 200) {
+      print('user groups ${response}');
       return (jsonDecode(response.body) as List).map((e) => GroupModel.fromJson(e)).toList();
     } else {
       throw ServerException(ServerErrorModel.fromJson(jsonDecode(response.body)));
@@ -52,8 +72,8 @@ class RemoteAccountDatasource extends BaseRemoteAccountDataSource {
     final String url = '${ApiConfig.baseUrl}${ApiConfig.createGroup}';
     http.Response response = await http.post(
       Uri.parse(url),
-      body: {"userId": userId, "name": name},
-      headers: {'Authorization': 'Bearer $token'},
+      body: json.encode({"userId": userId, "name": name}),
+      headers: {'Authorization': 'Bearer $token', "Content-Type": "application/json"},
     );
     if (response.statusCode == 201) {
       return GroupModel.fromJson(jsonDecode(response.body));
@@ -100,8 +120,8 @@ class RemoteAccountDatasource extends BaseRemoteAccountDataSource {
     final String url = '${ApiConfig.baseUrl}${ApiConfig.removeUserFromGroup}';
     http.Response response = await http.patch(
       Uri.parse(url),
-      body: {"groupId": groupId, "memberId": memberId},
-      headers: {'Authorization': 'Bearer $token'},
+      body: json.encode({"groupId": groupId, "memberId": memberId}),
+      headers: {'Authorization': 'Bearer $token', "Content-Type": "application/json"},
     );
     if (response.statusCode == 200) {
       return GroupModel.fromJson(jsonDecode(response.body));

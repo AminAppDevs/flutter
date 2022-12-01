@@ -1,3 +1,4 @@
+import 'package:image_picker/image_picker.dart';
 import 'package:jdolh_flutter/account/data/model/group_model.dart';
 import 'package:jdolh_flutter/account/data/model/success_model.dart';
 import 'package:jdolh_flutter/account/data/model/user_details_model.dart';
@@ -8,7 +9,7 @@ abstract class BaseRemoteAccountDataSource {
   Future<UserDetailsModel> getUserDetails(int userId);
 
   /// update user avatar
-  Future<SuccessModel> updateUserAvatar(int userId);
+  Future<SuccessModel> updateUserAvatar(XFile? file, int userId);
 
   /// make follow unfollow
   Future<SuccessModel> makeFollowUnfollow(int followerId, int followingId);

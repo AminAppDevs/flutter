@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:jdolh_flutter/account/domain/entities/group.dart';
 import 'package:jdolh_flutter/account/domain/entities/success.dart';
 import 'package:jdolh_flutter/account/domain/entities/user.dart';
@@ -10,7 +11,7 @@ abstract class BaseAccountRepository {
   Future<Either<Failure, UserDetails>> getUserDetails(int userId);
 
   /// update user avatar image
-  Future<Either<Failure, Success>> updateUserAvatar(int userId);
+  Future<Either<Failure, Success>> updateUserAvatar(XFile? file, int userId);
 
   /// make follow unfollow
   Future<Either<Failure, Success>> makeFollowUnfollow(int followerId, int followingId);

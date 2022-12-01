@@ -1,3 +1,4 @@
+import 'package:image_picker/image_picker.dart';
 import 'package:jdolh_flutter/account/data/datasource/base_remote_account_datasource.dart';
 import 'package:jdolh_flutter/account/domain/entities/user_details.dart';
 import 'package:jdolh_flutter/account/domain/entities/user.dart';
@@ -123,7 +124,12 @@ class AccountRepository extends BaseAccountRepository {
   }
 
   @override
-  Future<Either<Failure, Success>> updateUserAvatar(int userId) async {
-    throw UnimplementedError();
+  Future<Either<Failure, Success>> updateUserAvatar(XFile? file, int userId) async {
+    try {
+      final result = await baseRemoteAccountDataSource.updateUserAvatar(file, userId);
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.serverErrorModel.message, e.serverErrorModel.statusCode));
+    }
   }
 }

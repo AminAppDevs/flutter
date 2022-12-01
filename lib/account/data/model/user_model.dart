@@ -8,6 +8,11 @@ class UserModel extends User {
         json['id'],
         json['fullName'],
         json['phoneNumber'],
-        ImageModel.fromJson(json['avatar']),
+        ImageModel.fromJson(json['avatar'] ??
+            {
+              "id": 0,
+              "imageUrl": "https://jdolh-app-avatar.s3.ap-south-1.amazonaws.com/abdullah altamimi Cropped.jpg1669749178213",
+              "imageKey": "abdullah altamimi Cropped.jpg1669749178213"
+            }),
       );
 }
