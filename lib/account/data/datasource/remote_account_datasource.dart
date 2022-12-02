@@ -198,12 +198,14 @@ class RemoteAccountDatasource extends BaseRemoteAccountDataSource {
     final String url = '${ApiConfig.baseUrl}${ApiConfig.syncUserPhoneContacts}';
     http.Response response = await http.post(
       Uri.parse(url),
-      body: {"phoneContacts": json.encode(phoneContacts)},
-      headers: {'Authorization': 'Bearer $token'},
+      body: json.encode({"phoneContacts": phoneContacts}),
+      headers: {'Authorization': 'Bearer $token', "Content-Type": "application/json"},
     );
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
+      print(response.body);
       return (jsonDecode(response.body) as List).map((e) => UserModel.fromJson(e)).toList();
     } else {
+      print(response.body);
       throw ServerException(ServerErrorModel.fromJson(jsonDecode(response.body)));
     }
   }

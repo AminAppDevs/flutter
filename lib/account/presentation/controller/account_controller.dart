@@ -11,6 +11,7 @@ import 'package:jdolh_flutter/auth/presentation/controller/auth_controller.dart'
 import 'package:jdolh_flutter/core/error/failure.dart';
 import 'package:jdolh_flutter/core/services/service_locator.dart';
 import 'package:jdolh_flutter/core/utils/snackbar.dart';
+import 'package:contacts_service/contacts_service.dart';
 
 class AccountController extends GetxController {
   ///// usecases
@@ -57,6 +58,7 @@ class AccountController extends GetxController {
   bool isUploadAvatarLoading = false;
   bool isUserGroupsLoading = false;
   bool isCreateGroupLoading = false;
+  bool isGetContactsLoading = false;
   UserDetails? userDetails;
   List<User> followers = [];
   List<User> following = [];
@@ -66,6 +68,8 @@ class AccountController extends GetxController {
   XFile? imagePicked;
   List<Group> groups = [];
   Group? group;
+  List<Contact> contacts = [];
+  List<User> syncedUsers = [];
 
   ///// methods
   ///get user details
@@ -261,4 +265,50 @@ class AccountController extends GetxController {
       },
     );
   }
+
+  ///// get contacts
+  getContacts() async {
+    isGetContactsLoading = true;
+    update();
+    var contacts = await ContactsService.getContacts(
+      withThumbnails: false,
+      photoHighResolution: false,
+    );
+    syncPhoneContacts(contacts);
+    this.contacts = contacts;
+    isGetContactsLoading = false;
+    update();
+  }
+
+  ///// search phone contact
+  searchPhoneContacts(String query) async {}
+
+  ///// filter phone contacts
+  Future<List<String>> filterPhoneContacts(List<Contact> filterdContact) async {
+    filterdContact = await filterdContact.where((element) {
+      return element.phones!.isNotEmpty;
+    }).toList();
+    List<String> phonesResult = await filterdContact.map((Contact contact) {
+      var a = contact.phones!.first.value!.replaceAll(' ', '');
+      String phoneNum = '0${a.substring(a.length - 9)}';
+      return phoneNum;
+    }).toList();
+    return phonesResult;
+  }
+
+  ///// sync phone contacts
+  syncPhoneContacts(List<Contact> filterdContact) async {
+    List<String> finalContacts = await filterPhoneContacts(filterdContact);
+    var result = await syncUserPhoneContactsUsecase(finalContacts);
+    result.fold(
+      (Failure failure) {
+        AppSnackbar.errorSnackbar(message: 'يوجد خطأ ما الرجاء المحاولة مرة آخرى');
+      },
+      (List<User> users) {
+        syncedUsers = users;
+      },
+    );
+  }
+
+  ////// grouped contacts (users in app - invite to app - already you follow)
 }

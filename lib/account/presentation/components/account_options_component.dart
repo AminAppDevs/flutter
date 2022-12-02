@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:jdolh_flutter/account/presentation/controller/account_controller.dart';
+import 'package:jdolh_flutter/account/presentation/screens/friends_screen.dart';
 import 'package:jdolh_flutter/account/presentation/screens/groups_screen.dart';
 import 'package:jdolh_flutter/core/utils/app_light_color.dart';
 import 'package:jdolh_flutter/core/utils/global_utils.dart';
@@ -21,7 +22,10 @@ class AccountOptionsComponent extends StatelessWidget {
           context,
           icon: 'assets/images/account_friends.svg',
           text: 'قائمة الأصدقاء',
-          onTap: () {},
+          onTap: () {
+            Get.to(() => FriendsScreen());
+            accountController.getContacts();
+          },
         ),
         accountOptionItem(context, icon: 'assets/images/account_groups.svg', text: 'المجموعات', onTap: () {
           accountController.getUserGroups();
