@@ -12,6 +12,7 @@ import 'package:jdolh_flutter/core/error/failure.dart';
 import 'package:jdolh_flutter/core/services/service_locator.dart';
 import 'package:jdolh_flutter/core/utils/snackbar.dart';
 import 'package:contacts_service/contacts_service.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class AccountController extends GetxController {
   ///// usecases
@@ -68,7 +69,7 @@ class AccountController extends GetxController {
   XFile? imagePicked;
   List<Group> groups = [];
   Group? group;
-  List<Contact> contacts = [];
+  List<Map> contactsToInvite = [];
   List<User> syncedUsers = [];
 
   ///// methods
@@ -266,16 +267,49 @@ class AccountController extends GetxController {
     );
   }
 
-  ///// get contacts
+  ///// 1- get contacts and filter them
   getContacts() async {
     isGetContactsLoading = true;
     update();
-    var contacts = await ContactsService.getContacts(
+
+    PermissionStatus status = await Permission.contacts.status;
+    if (status.isDenied) {
+      PermissionStatus requestPermission = await Permission.contacts.request();
+      if (requestPermission.isGranted) {
+        getContactsMethod();
+      }
+    } else if (status.isGranted) {
+      getContactsMethod();
+    }
+  }
+
+  ///// get contacts methods
+  getContactsMethod() async {
+    List<Contact> contacts = await ContactsService.getContacts(
       withThumbnails: false,
       photoHighResolution: false,
     );
-    syncPhoneContacts(contacts);
-    this.contacts = contacts;
+    List<Contact> hasPhoneContacts = contacts.where(((Contact contact) => contact.phones!.isNotEmpty)).toList();
+    List<Map> contactsInfo = hasPhoneContacts.map((Contact contact) {
+      String phoneWithoutSpace = contact.phones!.first.value!.replaceAll(new RegExp(r'[^0-9]'), "");
+      String notEmptyPhone = '';
+      if (phoneWithoutSpace.isNotEmpty) {
+        notEmptyPhone = phoneWithoutSpace.substring(phoneWithoutSpace.length - 9);
+      }
+
+      return {
+        "name": contact.displayName,
+        "fullPhone": contact.phones!.first.value,
+        "phoneWithoutCode": '0$notEmptyPhone',
+      };
+    }).toList();
+
+    //// get string list of phones
+    List<String> phonesTosync = contactsInfo.map((Map e) => e['phoneWithoutCode'].toString()).toList();
+
+    ///get sync phones to db
+    syncPhoneContacts(phonesNumbers: phonesTosync, contactsInfo: contactsInfo);
+
     isGetContactsLoading = false;
     update();
   }
@@ -283,32 +317,37 @@ class AccountController extends GetxController {
   ///// search phone contact
   searchPhoneContacts(String query) async {}
 
-  ///// filter phone contacts
-  Future<List<String>> filterPhoneContacts(List<Contact> filterdContact) async {
-    filterdContact = await filterdContact.where((element) {
-      return element.phones!.isNotEmpty;
-    }).toList();
-    List<String> phonesResult = await filterdContact.map((Contact contact) {
-      var a = contact.phones!.first.value!.replaceAll(' ', '');
-      String phoneNum = '0${a.substring(a.length - 9)}';
-      return phoneNum;
-    }).toList();
-    return phonesResult;
-  }
-
   ///// sync phone contacts
-  syncPhoneContacts(List<Contact> filterdContact) async {
-    List<String> finalContacts = await filterPhoneContacts(filterdContact);
-    var result = await syncUserPhoneContactsUsecase(finalContacts);
+  syncPhoneContacts({required List<String> phonesNumbers, required List<Map> contactsInfo}) async {
+    isGetContactsLoading = true;
+    update();
+
+    var result = await syncUserPhoneContactsUsecase(phonesNumbers);
     result.fold(
       (Failure failure) {
+        isGetContactsLoading = false;
+        update();
         AppSnackbar.errorSnackbar(message: 'يوجد خطأ ما الرجاء المحاولة مرة آخرى');
       },
       (List<User> users) {
+        /// compare contacts info to users from server return just not in app contact
+        List<Map> contactsNotInApp =
+            contactsInfo.where((element) => users.any((User user) => user.phoneNumber != element['phoneWithoutCode'])).toList();
+        contactsToInvite = contactsNotInApp;
+        isGetContactsLoading = false;
         syncedUsers = users;
+        update();
+
+        /// get in app contact and not in app contact
       },
     );
   }
 
   ////// grouped contacts (users in app - invite to app - already you follow)
+  /// 1- get user contact
+  /// 2- filter user contact and make with no country code contact
+  /// 3- get sync phone contacts from db
+  /// 4- compare filtered contact with db synced contact
+  /// 5- make not in app group & in app group
+  /// 6- compare in app group with following and remove following
 }

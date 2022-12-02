@@ -11,7 +11,7 @@ class UserModel extends User {
         ImageModel.fromJson(json['avatar'] ??
             {
               "id": 0,
-              "imageUrl": "https://jdolh-app-avatar.s3.ap-south-1.amazonaws.com/abdullah altamimi Cropped.jpg1669749178213",
+              "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
               "imageKey": "abdullah altamimi Cropped.jpg1669749178213"
             }),
       );
