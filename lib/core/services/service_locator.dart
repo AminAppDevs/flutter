@@ -12,6 +12,13 @@ import 'package:jdolh_flutter/auth/domain/usecases/local_auth_usecases.dart';
 import 'package:jdolh_flutter/auth/domain/usecases/login_usecase.dart';
 import 'package:jdolh_flutter/auth/domain/usecases/register_usecase.dart';
 import 'package:jdolh_flutter/auth/domain/usecases/user_exist_usecase.dart';
+import 'package:jdolh_flutter/category/data/datasource/base_remote_category_datasource.dart';
+import 'package:jdolh_flutter/category/data/datasource/remote_category_datasource.dart';
+import 'package:jdolh_flutter/category/data/repository/category_repository.dart';
+import 'package:jdolh_flutter/category/domain/repository/base_category_repository.dart';
+import 'package:jdolh_flutter/category/domain/usecases/get_parent_categories_usecase.dart';
+import 'package:jdolh_flutter/category/domain/usecases/get_stores_of_category_usecase.dart';
+import 'package:jdolh_flutter/category/domain/usecases/get_subcategories_usecase.dart';
 
 final sl = GetIt.instance;
 
@@ -30,8 +37,10 @@ class ServiceLocator {
     sl.registerLazySingleton<BaseRemoteAccountDataSource>(() => RemoteAccountDatasource());
     sl.registerLazySingleton<BaseAccountRepository>(() => AccountRepository(sl()));
     sl.registerLazySingleton(() => GetUserDetailsUsecase(sl()));
+    sl.registerLazySingleton(() => UpdateUserInfoUsecase(sl()));
     sl.registerLazySingleton(() => UpdateUserAvatarUsecase(sl()));
     sl.registerLazySingleton(() => MakeFollowUnfollowUsecase(sl()));
+    sl.registerLazySingleton(() => IsFollowExistUsecase(sl()));
     sl.registerLazySingleton(() => GetUserFollowersUsecase(sl()));
     sl.registerLazySingleton(() => GetUserFollowingUsecase(sl()));
     sl.registerLazySingleton(() => SyncUserPhoneContactsUsecase(sl()));
@@ -41,5 +50,12 @@ class ServiceLocator {
     sl.registerLazySingleton(() => RemoveUserFromGroupUsecase(sl()));
     sl.registerLazySingleton(() => DeleteGroupUsecase(sl()));
     sl.registerLazySingleton(() => CreateGroupUsecase(sl()));
+
+    /// category
+    sl.registerLazySingleton<BaseRemoteCategoryDatasource>(() => RemoteCategoryDatasource());
+    sl.registerLazySingleton<BaseCategoryRepository>(() => CategoryRepository(sl()));
+    sl.registerLazySingleton(() => GetParentCategoriesUsecase(sl()));
+    sl.registerLazySingleton(() => GetSubCategoriesUsecase(sl()));
+    sl.registerLazySingleton(() => GetStoresOfCategoryUsecase(sl()));
   }
 }

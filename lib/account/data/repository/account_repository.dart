@@ -94,6 +94,16 @@ class AccountRepository extends BaseAccountRepository {
   }
 
   @override
+  Future<Either<Failure, Success>> isFollowExist(int followerId, int followingId) async {
+    try {
+      final result = await baseRemoteAccountDataSource.isFollowExist(followerId, followingId);
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.serverErrorModel.message, e.serverErrorModel.statusCode));
+    }
+  }
+
+  @override
   Future<Either<Failure, Group>> removeUserFromGroup(int groupId, int memberId) async {
     try {
       final resul = await baseRemoteAccountDataSource.removeUserFromGroup(groupId, memberId);
@@ -127,6 +137,16 @@ class AccountRepository extends BaseAccountRepository {
   Future<Either<Failure, Success>> updateUserAvatar(XFile? file, int userId) async {
     try {
       final result = await baseRemoteAccountDataSource.updateUserAvatar(file, userId);
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.serverErrorModel.message, e.serverErrorModel.statusCode));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Success>> updateUserInfo(int userId, Map<String, dynamic> body) async {
+    try {
+      final result = await baseRemoteAccountDataSource.updateUserInfo(userId, body);
       return Right(result);
     } on ServerException catch (e) {
       return Left(ServerFailure(e.serverErrorModel.message, e.serverErrorModel.statusCode));

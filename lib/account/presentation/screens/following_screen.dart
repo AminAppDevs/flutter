@@ -83,41 +83,78 @@ class FollowingScreen extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    CachedNetworkImage(
-                                      imageUrl: user.avatar.imageUrl,
-                                      placeholder: (context, url) => ShimmerEffect.shimmerBox(width: 50, height: 50, borderRaduis: 100),
-                                      errorWidget: (context, url, error) => Icon(Icons.error),
-                                      imageBuilder: (context, imageProvider) => Container(
-                                        width: 50,
-                                        height: 50,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(100),
-                                          border: Border.all(color: AppLightColor.inputBgColor, width: 3, strokeAlign: StrokeAlign.outside),
-                                          color: Colors.grey.shade200,
-                                          image: DecorationImage(
-                                            image: imageProvider,
-                                            fit: BoxFit.cover,
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        CachedNetworkImage(
+                                          imageUrl: user.avatar.imageUrl,
+                                          placeholder: (context, url) => ShimmerEffect.shimmerBox(width: 45, height: 45, borderRaduis: 100),
+                                          errorWidget: (context, url, error) => Icon(Icons.error),
+                                          imageBuilder: (context, imageProvider) => Container(
+                                            width: 45,
+                                            height: 45,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(100),
+                                              border: Border.all(color: AppLightColor.inputBgColor, width: 3, strokeAlign: StrokeAlign.outside),
+                                              color: Colors.grey.shade200,
+                                              image: DecorationImage(
+                                                image: imageProvider,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ),
-                                    horizontal(10),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          user.fullName,
-                                          style: Theme.of(context).textTheme.titleLarge!.copyWith(height: 1.5, fontWeight: FontWeight.w500),
-                                        ),
-                                        Text(
-                                          '${user.phoneNumber}@',
-                                          style: Theme.of(context).textTheme.labelMedium!.copyWith(height: 1),
+                                        horizontal(10),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              user.fullName,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleLarge!
+                                                  .copyWith(height: 1.5, fontWeight: FontWeight.w500, fontSize: 14),
+                                            ),
+                                            Text(
+                                              '${user.phoneNumber}@',
+                                              style: Theme.of(context).textTheme.labelMedium!.copyWith(height: 1.2, fontSize: 11),
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
+                                    if (controller.isMakeUnfollowForFollowingLoading && controller.followingIdisMakeUnfollowForFollowing == user.id)
+                                      SizedBox(
+                                        width: 25,
+                                        height: 25,
+                                        child: CircularProgressIndicator(
+                                          color: AppLightColor.primaryColor,
+                                          strokeWidth: 3,
+                                        ),
+                                      ),
+                                    if (!controller.isMakeUnfollowForFollowingLoading && controller.followingIdisMakeUnfollowForFollowing != user.id)
+                                      InkWell(
+                                        onTap: () {
+                                          controller.makeUnfollowTofollowing(user.id);
+                                        },
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                          decoration: BoxDecoration(
+                                            border: Border.all(color: AppLightColor.redColor),
+                                            borderRadius: BorderRadius.circular(6),
+                                          ),
+                                          child: Text(
+                                            'إلغاء المتابعة',
+                                            style: TextStyle(
+                                              fontSize: 10,
+                                              color: AppLightColor.redColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                   ],
                                 ),
                               ),

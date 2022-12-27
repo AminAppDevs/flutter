@@ -15,7 +15,13 @@ class ApiConfig {
   static const String removeUserFromGroup = '/user/group/remove_user';
   static const String deleteGroup = '/user/group/delete';
   static const String makeFollowUnfollow = '/user/follow/create';
+  static const String isFollowExist = '/user/follow/is_exist';
   static const String getUserFollower = '/user/followers';
   static const String getUserFollowing = '/user/following';
   static const String syncUserPhoneContacts = '/user/phone_contact/sync';
+
+  ///// account /////
+  static const String getParentCategories = '/store/store_category/all';
+  static const String getSubCategories = '/store/store_category/subcategories';
+  static const String getStoresOfCategories = '/store/stores_of_category';
 }

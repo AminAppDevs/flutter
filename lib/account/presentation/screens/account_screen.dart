@@ -9,7 +9,8 @@ import 'package:jdolh_flutter/core/utils/global_utils.dart';
 
 class AccountScreen extends StatelessWidget {
   AccountScreen({super.key});
-  final AccountController accountController = Get.put(AccountController(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+  final AccountController accountController =
+      Get.put(AccountController(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
 
   @override
   Widget build(BuildContext context) {

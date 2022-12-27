@@ -8,11 +8,17 @@ abstract class BaseRemoteAccountDataSource {
   /// get user details
   Future<UserDetailsModel> getUserDetails(int userId);
 
+  /// update user info
+  Future<SuccessModel> updateUserInfo(int userId, Map<String, dynamic> body);
+
   /// update user avatar
   Future<SuccessModel> updateUserAvatar(XFile? file, int userId);
 
   /// make follow unfollow
   Future<SuccessModel> makeFollowUnfollow(int followerId, int followingId);
+
+  /// is follow exist
+  Future<SuccessModel> isFollowExist(int followerId, int followingId);
 
   /// get user followers
   Future<List<UserModel>> getUserFollowers(int userId);

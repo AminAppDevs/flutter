@@ -9,12 +9,16 @@ import 'package:jdolh_flutter/core/error/failure.dart';
 abstract class BaseAccountRepository {
   /// get user details
   Future<Either<Failure, UserDetails>> getUserDetails(int userId);
+  Future<Either<Failure, Success>> updateUserInfo(int userId, Map<String, dynamic> body);
 
   /// update user avatar image
   Future<Either<Failure, Success>> updateUserAvatar(XFile? file, int userId);
 
   /// make follow unfollow
   Future<Either<Failure, Success>> makeFollowUnfollow(int followerId, int followingId);
+
+  /// is follow exist
+  Future<Either<Failure, Success>> isFollowExist(int followerId, int followingId);
 
   /// get user followers
   Future<Either<Failure, List<User>>> getUserFollowers(int userId);

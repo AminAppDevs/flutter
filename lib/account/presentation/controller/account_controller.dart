@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:dartz/dartz.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -17,6 +19,7 @@ import 'package:permission_handler/permission_handler.dart';
 class AccountController extends GetxController {
   ///// usecases
   final GetUserDetailsUsecase getUserDetailsUsecase;
+  final UpdateUserInfoUsecase updateUserInfoUsecase;
   final UpdateUserAvatarUsecase updateUserAvatarUsecase;
   final MakeFollowUnfollowUsecase makeFollowUnfollowUsecase;
   final GetUserFollowersUsecase getUserFollowersUsecase;
@@ -28,6 +31,7 @@ class AccountController extends GetxController {
   final AddUserToGroupUsecase addUserToGroupUsecase;
   final RemoveUserFromGroupUsecase removeUserFromGroupUsecase;
   final DeleteGroupUsecase deleteGroupUsecase;
+  final IsFollowExistUsecase isFollowExistUsecase;
 
   AccountController(
     this.getUserDetailsUsecase,
@@ -42,6 +46,8 @@ class AccountController extends GetxController {
     this.addUserToGroupUsecase,
     this.removeUserFromGroupUsecase,
     this.deleteGroupUsecase,
+    this.updateUserInfoUsecase,
+    this.isFollowExistUsecase,
   );
 
   final int userId = AuthController(sl(), sl(), sl(), sl()).localAuthUsecases.readUserId();
@@ -51,16 +57,28 @@ class AccountController extends GetxController {
     super.onInit();
 
     getUserDetails();
+    getUserFollowing();
   }
 
   ///// properites
   bool isUserDetailsLoading = false;
+  bool isUserProfileDetailsLoading = false;
   bool isFollowersFollowingLoading = false;
   bool isUploadAvatarLoading = false;
   bool isUserGroupsLoading = false;
   bool isCreateGroupLoading = false;
   bool isGetContactsLoading = false;
+  bool isMakeFollowLoading = false;
+  bool isUpdateUserInfoLoading = false;
+  bool isAddMemeberToGroupLoading = false;
+  bool isExistFollowLoading = false;
+  bool isUpdateGroupLoading = false;
+  int loadingFlollowUserId = 0;
+  bool isMakeUnfollowForFollowingLoading = false;
+  bool isFriendsSearchActive = false;
+  int followingIdisMakeUnfollowForFollowing = 0;
   UserDetails? userDetails;
+  UserDetails? userProfileDetails;
   List<User> followers = [];
   List<User> following = [];
   List<User> followersSearchResult = [];
@@ -69,8 +87,15 @@ class AccountController extends GetxController {
   XFile? imagePicked;
   List<Group> groups = [];
   Group? group;
+  List<Map> contactsToInviteAll = [];
   List<Map> contactsToInvite = [];
   List<User> syncedUsers = [];
+  String fullNameForUpdate = '';
+  int groupIdToAddUser = 0;
+  int userIdToAddToGroup = 0;
+  List<User> memberToAddToGroup = [];
+  bool isFollowingUserExist = false;
+  String updateGroupNewName = '';
 
   ///// methods
   ///get user details
@@ -89,7 +114,52 @@ class AccountController extends GetxController {
         update();
         this.userDetails = userDetails;
         update();
-        print(userDetails);
+      },
+    );
+  }
+
+  ///// get user profile details
+  getUserProfileDetails(int userProfileId) async {
+    Either<Failure, UserDetails> result = await getUserDetailsUsecase(userProfileId);
+    isUserProfileDetailsLoading = true;
+    update();
+    isFollowExistMethod(userProfileId);
+    result.fold(
+      (Failure failure) {
+        isUserProfileDetailsLoading = false;
+        update();
+        AppSnackbar.errorSnackbar(message: 'يوجد خطأ ما الرجاء المحاولة مرة آخرى');
+      },
+      (UserDetails userDetails) {
+        isUserProfileDetailsLoading = false;
+        update();
+        this.userProfileDetails = userDetails;
+        update();
+      },
+    );
+  }
+
+  updateIsFriendsSearch() {
+    isFriendsSearchActive = !isFriendsSearchActive;
+    update();
+  }
+
+  ////// update user info
+  updateUserInfo(Map<String, dynamic> body) async {
+    isUpdateUserInfoLoading = true;
+    update();
+    Either<Failure, Success> result = await updateUserInfoUsecase(userId, body);
+    result.fold(
+      (Failure failure) {
+        AppSnackbar.errorSnackbar(message: 'يوجد خطأ ما الرجاء المحاولة مرة آخرى');
+        isUpdateUserInfoLoading = false;
+        update();
+      },
+      (Success success) {
+        getUserDetails();
+        isUpdateUserInfoLoading = false;
+        update();
+        Get.back();
       },
     );
   }
@@ -138,6 +208,8 @@ class AccountController extends GetxController {
 
   ///// get user following
   getUserFollowing() async {
+    isFollowersFollowingLoading = true;
+    update();
     Either<Failure, List<User>> result = await getUserFollowingUsecase(userId);
     result.fold(
       (Failure failure) {
@@ -146,6 +218,7 @@ class AccountController extends GetxController {
         AppSnackbar.errorSnackbar(message: 'يوجد خطأ ما الرجاء المحاولة مرة آخرى');
       },
       (List<User> following) {
+        print(following);
         isFollowersFollowingLoading = false;
         this.following = following;
         followingsSearchResult = following;
@@ -191,12 +264,10 @@ class AccountController extends GetxController {
       final XFile? image = await picker.pickImage(source: ImageSource.gallery, imageQuality: 8);
       imagePicked = image;
       update();
-      print(image!.path);
     } else {
       final XFile? image = await picker.pickImage(source: ImageSource.camera, imageQuality: 8);
       imagePicked = image;
       update();
-      print(image);
     }
   }
 
@@ -215,8 +286,6 @@ class AccountController extends GetxController {
         isUserGroupsLoading = false;
         this.groups = groups;
         update();
-        print(this.groups);
-        print(groups);
       },
     );
   }
@@ -230,9 +299,8 @@ class AccountController extends GetxController {
       (Failure failure) {
         isCreateGroupLoading = false;
         update();
-        print(failure);
         if (failure.statusCode == 409) {
-          AppSnackbar.errorSnackbar(message: 'توجد مجموعة بنفس الإسم، الرجاء اختيار اسم اخر');
+          AppSnackbar.errorSnackbar(message: 'توجد لديك مجموعة بنفس الإسم، الرجاء اختيار اسم اخر');
         } else {
           AppSnackbar.errorSnackbar(message: 'يوجد خطأ ما الرجاء المحاولة مرة آخرى');
         }
@@ -247,11 +315,53 @@ class AccountController extends GetxController {
     );
   }
 
+  ////// update group
+  updateGroup(int groupId) async {
+    isUpdateGroupLoading = true;
+    update();
+    Either<Failure, Group> result = await updateGroupUsecase(groupId, updateGroupNewName);
+    result.fold(
+      (Failure failure) {
+        isUpdateGroupLoading = false;
+        update();
+        if (failure.statusCode == 409) {
+          AppSnackbar.errorSnackbar(message: 'توجد لديك مجموعة بنفس الإسم، الرجاء اختيار اسم اخر');
+        } else {
+          AppSnackbar.errorSnackbar(message: 'يوجد خطأ ما الرجاء المحاولة مرة آخرى');
+        }
+      },
+      (Group group) {
+        getUserGroups();
+        this.group = group;
+        isUpdateGroupLoading = false;
+        update();
+        Get.back();
+      },
+    );
+  }
+
   ///// get group details
   getGroupDetails(Group group) {
     this.group = group;
     update();
     Get.to(() => GroupDetailsScreen());
+  }
+
+  ///// add user to group
+  addUserToGroup(int memberId) async {
+    isAddMemeberToGroupLoading = true;
+    update();
+    Either<Failure, Group> result = await addUserToGroupUsecase(groupIdToAddUser, memberId);
+    result.fold(
+      (Failure failure) {},
+      (Group group) {
+        getUserGroups();
+        this.group = group;
+        isAddMemeberToGroupLoading = false;
+        update();
+        Get.back();
+      },
+    );
   }
 
   ///// remove member from group
@@ -262,7 +372,9 @@ class AccountController extends GetxController {
         AppSnackbar.errorSnackbar(message: 'يوجد خطأ ما الرجاء المحاولة مرة آخرى');
       },
       (Group group) {
-        getGroupDetails(group);
+        getUserGroups();
+        this.group = group;
+        update();
       },
     );
   }
@@ -273,6 +385,7 @@ class AccountController extends GetxController {
     update();
 
     PermissionStatus status = await Permission.contacts.status;
+
     if (status.isDenied) {
       PermissionStatus requestPermission = await Permission.contacts.request();
       if (requestPermission.isGranted) {
@@ -280,7 +393,7 @@ class AccountController extends GetxController {
       }
     } else if (status.isGranted) {
       getContactsMethod();
-    }
+    } else {}
   }
 
   ///// get contacts methods
@@ -289,11 +402,12 @@ class AccountController extends GetxController {
       withThumbnails: false,
       photoHighResolution: false,
     );
-    List<Contact> hasPhoneContacts = contacts.where(((Contact contact) => contact.phones!.isNotEmpty)).toList();
-    List<Map> contactsInfo = hasPhoneContacts.map((Contact contact) {
+    List<Contact> hasPhoneContacts = await contacts.where(((Contact contact) => contact.phones!.isNotEmpty)).toList();
+
+    List<Map> contactsInfo = await hasPhoneContacts.map((Contact contact) {
       String phoneWithoutSpace = contact.phones!.first.value!.replaceAll(new RegExp(r'[^0-9]'), "");
       String notEmptyPhone = '';
-      if (phoneWithoutSpace.isNotEmpty) {
+      if (phoneWithoutSpace.length >= 9) {
         notEmptyPhone = phoneWithoutSpace.substring(phoneWithoutSpace.length - 9);
       }
 
@@ -309,13 +423,9 @@ class AccountController extends GetxController {
 
     ///get sync phones to db
     syncPhoneContacts(phonesNumbers: phonesTosync, contactsInfo: contactsInfo);
-
     isGetContactsLoading = false;
     update();
   }
-
-  ///// search phone contact
-  searchPhoneContacts(String query) async {}
 
   ///// sync phone contacts
   syncPhoneContacts({required List<String> phonesNumbers, required List<Map> contactsInfo}) async {
@@ -329,25 +439,122 @@ class AccountController extends GetxController {
         update();
         AppSnackbar.errorSnackbar(message: 'يوجد خطأ ما الرجاء المحاولة مرة آخرى');
       },
-      (List<User> users) {
+      (List<User> users) async {
         /// compare contacts info to users from server return just not in app contact
         List<Map> contactsNotInApp =
-            contactsInfo.where((element) => users.any((User user) => user.phoneNumber != element['phoneWithoutCode'])).toList();
+            contactsInfo.where((element) => !users.any((User user) => user.phoneNumber == element['phoneWithoutCode'])).toList();
         contactsToInvite = contactsNotInApp;
+        contactsToInviteAll = contactsNotInApp;
         isGetContactsLoading = false;
-        syncedUsers = users;
         update();
 
-        /// get in app contact and not in app contact
+        var filteredSyncedContacts = users.where((element) => !following.any((User user) => user.phoneNumber == element.phoneNumber)).toList();
+        syncedUsers = filteredSyncedContacts;
+        update();
+
+        print(following);
       },
     );
   }
 
-  ////// grouped contacts (users in app - invite to app - already you follow)
-  /// 1- get user contact
-  /// 2- filter user contact and make with no country code contact
-  /// 3- get sync phone contacts from db
-  /// 4- compare filtered contact with db synced contact
-  /// 5- make not in app group & in app group
-  /// 6- compare in app group with following and remove following
+  ///// serch in contacts
+  searchInContacts(String query) async {
+    if (query == '') {
+      contactsToInvite = contactsToInviteAll;
+      update();
+    } else {
+      contactsToInvite = contactsToInvite.where((element) => element['name'].contains(query) || element['fullPhone'].contains(query)).toList();
+      update();
+    }
+  }
+
+  ////// make follow
+  makeFollowOnFriendsScreen(int followingId) async {
+    loadingFlollowUserId = followingId;
+    isFollowersFollowingLoading = true;
+    update();
+    Either<Failure, Success> result = await makeFollowUnfollowUsecase(userId, followingId);
+    result.fold(
+      (Failure failure) {
+        isFollowersFollowingLoading = false;
+        update();
+        AppSnackbar.errorSnackbar(message: 'يوجد خطأ ما الرجاء المحاولة مرة آخرى');
+      },
+      (Success success) {
+        isFollowersFollowingLoading = false;
+        update();
+        syncedUsers.removeWhere((element) => element.id == followingId);
+        update();
+        getUserDetails();
+      },
+    );
+  }
+
+  /// make follow on profile screen
+  makeFollowOnProfilePage(int followingId) async {
+    isExistFollowLoading = true;
+    update();
+    Either<Failure, Success> result = await makeFollowUnfollowUsecase(userId, followingId);
+    result.fold(
+      (Failure failure) {
+        isExistFollowLoading = false;
+        update();
+        AppSnackbar.errorSnackbar(message: 'يوجد خطأ ما الرجاء المحاولة مرة آخرى');
+      },
+      (Success success) {
+        isExistFollowLoading = false;
+        update();
+        isFollowExistMethod(followingId);
+        getUserDetails();
+      },
+    );
+  }
+
+  ////// is exist follow
+  isFollowExistMethod(int followingId) async {
+    isExistFollowLoading = true;
+    update();
+    Either<Failure, Success> result = await isFollowExistUsecase(userId, followingId);
+    result.fold(
+      (Failure failure) {
+        isExistFollowLoading = false;
+        update();
+        AppSnackbar.errorSnackbar(message: 'يوجد خطأ ما الرجاء المحاولة مرة آخرى');
+      },
+      (Success success) {
+        isFollowingUserExist = success.status;
+        update();
+        isExistFollowLoading = false;
+        update();
+      },
+    );
+  }
+
+  ////// make unfollow to following
+  makeUnfollowTofollowing(int followingId) async {
+    isMakeUnfollowForFollowingLoading = true;
+    followingIdisMakeUnfollowForFollowing = followingId;
+    update();
+    Either<Failure, Success> result = await makeFollowUnfollowUsecase(userId, followingId);
+
+    result.fold(
+      (Failure failure) {
+        isMakeUnfollowForFollowingLoading = false;
+        update();
+        AppSnackbar.errorSnackbar(message: 'يوجد خطأ ما الرجاء المحاولة مرة آخرى');
+      },
+      (Success success) {
+        isMakeUnfollowForFollowingLoading = false;
+        update();
+        getUserFollowing();
+        getUserDetails();
+      },
+    );
+  }
+
+  ///// filter member to add to group
+  filterMemberToAddToGroup() async {
+    followingsSearchResult = following.where((follow) => !group!.members.any((member) => member.id == follow.id)).toList();
+    update();
+  }
 }

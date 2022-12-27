@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:get/get.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:jdolh_flutter/account/presentation/controller/account_controller.dart';
 import 'package:jdolh_flutter/core/utils/app_light_color.dart';
@@ -22,7 +21,13 @@ class FriendsScreen extends StatelessWidget {
         appBar: AppBar(
           centerTitle: true,
           title: Text('الأصدقاء'),
-          actions: [],
+          actions: [
+            IconButton(
+                onPressed: () {
+                  controller.updateIsFriendsSearch();
+                },
+                icon: Icon(controller.isFriendsSearchActive ? Ionicons.close : Ionicons.search))
+          ],
         ),
         body: controller.isGetContactsLoading
             ? Center(
@@ -38,67 +43,107 @@ class FriendsScreen extends StatelessWidget {
             : Column(
                 children: [
                   vertical(10),
-                  Container(
-                    height: 135,
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: controller.syncedUsers.length,
-                      itemBuilder: (context, index) => Container(
-                        height: 135,
-                        margin: const EdgeInsets.symmetric(horizontal: 3),
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: AppLightColor.inputBgColor,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Column(
-                          children: [
-                            CachedNetworkImage(
-                              imageUrl: controller.syncedUsers[index].avatar.imageUrl,
-                              placeholder: (context, url) => ShimmerEffect.shimmerBox(width: 50, height: 50, borderRaduis: 100),
-                              errorWidget: (context, url, error) => Icon(Icons.error),
-                              imageBuilder: (context, imageProvider) => Container(
-                                width: 50,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(100),
-                                  border: Border.all(color: AppLightColor.inputBgColor, width: 3, strokeAlign: StrokeAlign.outside),
-                                  color: Colors.grey.shade200,
-                                  image: DecorationImage(
-                                    image: imageProvider,
-                                    fit: BoxFit.cover,
+                  if (!controller.isFriendsSearchActive && controller.syncedUsers.isNotEmpty)
+                    Container(
+                      height: 135,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: controller.syncedUsers.length,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            height: 135,
+                            margin: const EdgeInsets.symmetric(horizontal: 3),
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: AppLightColor.inputBgColor.withOpacity(.8),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Column(
+                              children: [
+                                CachedNetworkImage(
+                                  imageUrl: controller.syncedUsers[index].avatar.imageUrl,
+                                  placeholder: (context, url) => ShimmerEffect.shimmerBox(width: 50, height: 50, borderRaduis: 100),
+                                  errorWidget: (context, url, error) => Icon(Icons.error),
+                                  imageBuilder: (context, imageProvider) => Container(
+                                    width: 50,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(100),
+                                      border: Border.all(color: AppLightColor.inputBgColor, width: 3, strokeAlign: StrokeAlign.outside),
+                                      color: Colors.grey.shade200,
+                                      image: DecorationImage(
+                                        image: imageProvider,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                            Text(controller.syncedUsers[index].fullName, style: Theme.of(context).textTheme.titleMedium!.copyWith(fontSize: 11)),
-                            Text(
-                              controller.syncedUsers[index].phoneNumber,
-                              style: Theme.of(context).textTheme.labelMedium!.copyWith(height: 1, fontSize: 10),
-                            ),
-                            vertical(5),
-                            InkWell(
-                              onTap: () {},
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 22),
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: AppLightColor.primaryColor),
-                                child: Text(
-                                  'متابعة',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
+                                Text(controller.syncedUsers[index].fullName, style: Theme.of(context).textTheme.titleMedium!.copyWith(fontSize: 11)),
+                                Text(
+                                  controller.syncedUsers[index].phoneNumber,
+                                  style: Theme.of(context).textTheme.labelMedium!.copyWith(height: 1, fontSize: 10),
+                                ),
+                                vertical(5),
+                                InkWell(
+                                  onTap: () {
+                                    accountController.makeFollowOnFriendsScreen(controller.syncedUsers[index].id);
+                                  },
+                                  child: Container(
+                                    width: 70,
+                                    height: 30,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: AppLightColor.primaryColor),
+                                    child:
+                                        controller.isFollowersFollowingLoading && controller.loadingFlollowUserId == controller.syncedUsers[index].id
+                                            ? Center(
+                                                child: SizedBox(
+                                                  width: 12,
+                                                  height: 12,
+                                                  child: CircularProgressIndicator(
+                                                    color: Colors.white,
+                                                    strokeWidth: 1,
+                                                  ),
+                                                ),
+                                              )
+                                            : Text(
+                                                'متابعة',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 10,
+                                                ),
+                                              ),
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
-                          ],
+                          );
+                        },
+                      ),
+                    ),
+                  if (!controller.isFriendsSearchActive && controller.syncedUsers.isNotEmpty)
+                    Column(
+                      children: [
+                        vertical(5),
+                        Divider(),
+                      ],
+                    ),
+                  if (controller.isFriendsSearchActive)
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                      color: Colors.white,
+                      child: TextFormField(
+                        keyboardType: TextInputType.text,
+                        onChanged: (value) {
+                          accountController.searchInContacts(value);
+                        },
+                        decoration: InputDecoration(
+                          suffixIcon: Icon(Ionicons.search),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                          hintText: 'بحث بالاسم أو رقم الجوال',
                         ),
                       ),
                     ),
-                  ),
-                  vertical(7),
                   Expanded(
                     child: ListView.builder(
                       shrinkWrap: true,
@@ -149,9 +194,9 @@ class FriendsScreen extends StatelessWidget {
                                   final Uri uri = Uri(
                                       scheme: 'https',
                                       host: url,
-                                      path: '+$phoneWithoutSpace',
+                                      path: '$phoneWithoutSpace',
                                       query: 'text=قم بتحميل تطبيق جدولة على الرابط التالي  https://google.com');
-                                  print(url);
+
                                   if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
                                     AppSnackbar.errorSnackbar(message: 'يوجد ما!');
                                   }

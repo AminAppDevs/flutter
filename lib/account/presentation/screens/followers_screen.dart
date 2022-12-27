@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:jdolh_flutter/account/domain/entities/user.dart';
 import 'package:jdolh_flutter/account/presentation/controller/account_controller.dart';
+import 'package:jdolh_flutter/account/presentation/screens/user_profile_screen.dart';
 import 'package:jdolh_flutter/core/utils/app_light_color.dart';
 import 'package:jdolh_flutter/core/utils/global_utils.dart';
 import 'package:jdolh_flutter/core/utils/shimmer_effect.dart';
@@ -74,6 +75,8 @@ class FollowersScreen extends StatelessWidget {
                             return InkWell(
                               onTap: () {
                                 print(user.id);
+                                Get.to(() => UserProfileScreen());
+                                controller.getUserProfileDetails(user.id);
                               },
                               child: Container(
                                 padding: const EdgeInsets.all(7),
@@ -87,11 +90,11 @@ class FollowersScreen extends StatelessWidget {
                                   children: [
                                     CachedNetworkImage(
                                       imageUrl: user.avatar.imageUrl,
-                                      placeholder: (context, url) => ShimmerEffect.shimmerBox(width: 50, height: 50, borderRaduis: 100),
+                                      placeholder: (context, url) => ShimmerEffect.shimmerBox(width: 45, height: 45, borderRaduis: 100),
                                       errorWidget: (context, url, error) => Icon(Icons.error),
                                       imageBuilder: (context, imageProvider) => Container(
-                                        width: 50,
-                                        height: 50,
+                                        width: 45,
+                                        height: 45,
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(100),
                                           border: Border.all(color: AppLightColor.inputBgColor, width: 3, strokeAlign: StrokeAlign.outside),
@@ -110,11 +113,14 @@ class FollowersScreen extends StatelessWidget {
                                       children: [
                                         Text(
                                           user.fullName,
-                                          style: Theme.of(context).textTheme.titleLarge!.copyWith(height: 1.5, fontWeight: FontWeight.w500),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleLarge!
+                                              .copyWith(height: 1.5, fontWeight: FontWeight.w500, fontSize: 14),
                                         ),
                                         Text(
                                           '${user.phoneNumber}@',
-                                          style: Theme.of(context).textTheme.labelMedium!.copyWith(height: 1),
+                                          style: Theme.of(context).textTheme.labelMedium!.copyWith(height: 1.2, fontSize: 11),
                                         ),
                                       ],
                                     ),

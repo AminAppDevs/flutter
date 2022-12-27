@@ -17,6 +17,21 @@ import 'package:jdolh_flutter/core/utils/api_config.dart';
 class RemoteAccountDatasource extends BaseRemoteAccountDataSource {
   final String token = AuthController(sl(), sl(), sl(), sl()).localAuthUsecases.readToken();
 ///// update user info
+  ///@override
+  Future<SuccessModel> updateUserInfo(int userId, Map<String, dynamic> body) async {
+    final String url = '${ApiConfig.baseUrl}${ApiConfig.userDetails}/$userId';
+    http.Response response = await http.patch(
+      Uri.parse(url),
+      body: body,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+    if (response.statusCode == 200) {
+      return SuccessModel.fromJson(jsonDecode(response.body));
+    } else {
+      throw ServerException(ServerErrorModel.fromJson(jsonDecode(response.body)));
+    }
+  }
+
   ///get user details
   @override
   Future<UserDetailsModel> getUserDetails(int userId) async {
@@ -104,8 +119,8 @@ class RemoteAccountDatasource extends BaseRemoteAccountDataSource {
     final String url = '${ApiConfig.baseUrl}${ApiConfig.addUserToGroup}';
     http.Response response = await http.patch(
       Uri.parse(url),
-      body: {"groupId": groupId, "memberId": memberId},
-      headers: {'Authorization': 'Bearer $token'},
+      body: json.encode({"groupId": groupId, "memberId": memberId}),
+      headers: {'Authorization': 'Bearer $token', "Content-Type": "application/json"},
     );
     if (response.statusCode == 200) {
       return GroupModel.fromJson(jsonDecode(response.body));
@@ -152,8 +167,24 @@ class RemoteAccountDatasource extends BaseRemoteAccountDataSource {
     final String url = '${ApiConfig.baseUrl}${ApiConfig.makeFollowUnfollow}';
     http.Response response = await http.post(
       Uri.parse(url),
-      body: {"followerId": followerId, "followingId": followingId},
-      headers: {'Authorization': 'Bearer $token'},
+      body: json.encode({"followerId": followerId, "followingId": followingId}),
+      headers: {'Authorization': 'Bearer $token', "Content-Type": "application/json"},
+    );
+    if (response.statusCode == 201) {
+      return SuccessModel.fromJson(jsonDecode(response.body));
+    } else {
+      throw ServerException(ServerErrorModel.fromJson(jsonDecode(response.body)));
+    }
+  }
+
+  /// is follow exist
+  @override
+  Future<SuccessModel> isFollowExist(int followerId, int followingId) async {
+    final String url = '${ApiConfig.baseUrl}${ApiConfig.isFollowExist}';
+    http.Response response = await http.post(
+      Uri.parse(url),
+      body: json.encode({"followerId": followerId, "followingId": followingId}),
+      headers: {'Authorization': 'Bearer $token', "Content-Type": "application/json"},
     );
     if (response.statusCode == 201) {
       return SuccessModel.fromJson(jsonDecode(response.body));
@@ -202,7 +233,6 @@ class RemoteAccountDatasource extends BaseRemoteAccountDataSource {
       headers: {'Authorization': 'Bearer $token', "Content-Type": "application/json"},
     );
     if (response.statusCode == 201) {
-      print(response.body);
       return (jsonDecode(response.body) as List).map((e) => UserModel.fromJson(e)).toList();
     } else {
       print(response.body);

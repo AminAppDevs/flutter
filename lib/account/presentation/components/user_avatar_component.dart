@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:jdolh_flutter/account/presentation/components/account_shimmer.dart';
@@ -9,6 +10,7 @@ import 'package:jdolh_flutter/account/presentation/controller/account_controller
 import 'package:jdolh_flutter/core/utils/app_light_color.dart';
 import 'package:jdolh_flutter/core/utils/global_utils.dart';
 import 'package:jdolh_flutter/core/utils/shimmer_effect.dart';
+import 'package:jdolh_flutter/core/utils/snackbar.dart';
 
 class UserAvatarComponent extends StatelessWidget {
   UserAvatarComponent({super.key});
@@ -138,12 +140,83 @@ class UserAvatarComponent extends StatelessWidget {
                 ),
               ),
               vertical(6),
-              Text(accountController.userDetails!.fullName, style: Theme.of(context).textTheme.headlineSmall),
-              Text(
-                '${accountController.userDetails!.phoneNumber}@',
-                style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                      height: .7,
+              InkWell(
+                onTap: () {
+                  Get.bottomSheet(
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      height: 200,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(15),
+                          topRight: Radius.circular(15),
+                        ),
+                      ),
+                      child: ListView(
+                        children: [
+                          Text('تحديث بياناتك الشخصية', style: Theme.of(context).textTheme.titleMedium),
+                          vertical(12),
+                          if (controller.isUpdateUserInfoLoading)
+                            Center(
+                              child: SizedBox(
+                                width: 25,
+                                height: 25,
+                                child: CircularProgressIndicator(
+                                  color: AppLightColor.primaryColor,
+                                  strokeWidth: 3,
+                                ),
+                              ),
+                            ),
+                          if (!controller.isUpdateUserInfoLoading)
+                            Form(
+                              child: Column(
+                                children: [
+                                  TextFormField(
+                                    initialValue: controller.userDetails!.fullName,
+                                    onChanged: (value) {
+                                      controller.fullNameForUpdate = value;
+                                    },
+                                    decoration: InputDecoration(
+                                      hintText: 'اسمك بالكامل',
+                                      contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                                    ),
+                                  ),
+                                  vertical(5),
+                                  Container(
+                                    width: double.infinity,
+                                    child: ElevatedButton(
+                                        onPressed: () {
+                                          if (controller.fullNameForUpdate.isEmpty) {
+                                            AppSnackbar.errorSnackbar(message: 'حقل الاسم فارغ');
+                                          } else {
+                                            controller.updateUserInfo({"fullName": controller.fullNameForUpdate});
+                                          }
+                                        },
+                                        child: Text('تحديث')),
+                                  )
+                                ],
+                              ),
+                            ),
+                        ],
+                      ),
                     ),
+                  );
+                },
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(accountController.userDetails!.fullName, style: Theme.of(context).textTheme.headlineSmall),
+                        horizontal(5),
+                        SvgPicture.asset('assets/images/edit.svg', height: 16, color: AppLightColor.subHeadingColor),
+                        horizontal(5),
+                      ],
+                    ),
+                    Text('${accountController.userDetails!.phoneNumber}@', style: Theme.of(context).textTheme.labelLarge!.copyWith(height: .7)),
+                  ],
+                ),
               ),
             ],
           ),

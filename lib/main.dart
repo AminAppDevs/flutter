@@ -37,7 +37,7 @@ class App extends StatelessWidget {
     );
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: authController.localAuthUsecases.readIsLogin() != true ? SigninScreen() : AccountScreen(),
+      home: authController.localAuthUsecases.readIsLogin() != true ? SigninScreen() : DashboardScreen(),
       theme: lightTheme,
       locale: const Locale("ar"),
       fallbackLocale: const Locale("ar"),

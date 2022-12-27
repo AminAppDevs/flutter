@@ -8,7 +8,7 @@ Container createGroupBootmsheet(BuildContext context) {
   final groupForm = GlobalKey<FormState>();
   final TextEditingController groupNameController = TextEditingController();
   return Container(
-    height: 260,
+    height: 300,
     padding: const EdgeInsets.all(20),
     decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10))),
     child: Column(
@@ -30,33 +30,35 @@ Container createGroupBootmsheet(BuildContext context) {
                       ),
                     ),
                   )
-                : Column(
-                    children: [
-                      TextFormField(
-                        controller: groupNameController,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'الحقل فارغ';
-                          }
-                          return null;
-                        },
-                        decoration:
-                            InputDecoration(hintText: 'اسم المجموعة', contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 17)),
-                      ),
-                      vertical(10),
-                      Container(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (groupForm.currentState!.validate()) {
-                              print(groupNameController.text);
-                              controller.createGroup(groupNameController.text);
+                : Expanded(
+                    child: ListView(
+                      children: [
+                        TextFormField(
+                          controller: groupNameController,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'الحقل فارغ';
                             }
+                            return null;
                           },
-                          child: Text('انشاء'),
+                          decoration:
+                              InputDecoration(hintText: 'اسم المجموعة', contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 17)),
                         ),
-                      ),
-                    ],
+                        vertical(10),
+                        Container(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (groupForm.currentState!.validate()) {
+                                print(groupNameController.text);
+                                controller.createGroup(groupNameController.text);
+                              }
+                            },
+                            child: Text('انشاء'),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
           ),
         ),

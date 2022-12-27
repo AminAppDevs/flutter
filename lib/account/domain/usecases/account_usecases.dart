@@ -17,6 +17,15 @@ class GetUserDetailsUsecase {
   }
 }
 
+///// update user info
+class UpdateUserInfoUsecase {
+  final BaseAccountRepository baseAccountRepository;
+  const UpdateUserInfoUsecase(this.baseAccountRepository);
+  Future<Either<Failure, Success>> call(int userId, Map<String, dynamic> body) async {
+    return await baseAccountRepository.updateUserInfo(userId, body);
+  }
+}
+
 ///// update user avatar
 class UpdateUserAvatarUsecase {
   final BaseAccountRepository baseAccountRepository;
@@ -34,6 +43,16 @@ class MakeFollowUnfollowUsecase {
 
   Future<Either<Failure, Success>> call(int followerId, int followingId) async {
     return await baseAccountRepository.makeFollowUnfollow(followerId, followingId);
+  }
+}
+
+///// is follow exist
+class IsFollowExistUsecase {
+  final BaseAccountRepository baseAccountRepository;
+  IsFollowExistUsecase(this.baseAccountRepository);
+
+  Future<Either<Failure, Success>> call(int followerId, int followingId) async {
+    return await baseAccountRepository.isFollowExist(followerId, followingId);
   }
 }
 

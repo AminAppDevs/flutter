@@ -30,6 +30,7 @@ class GroupsScreen extends StatelessWidget {
               return InkWell(
                 onTap: () {
                   controller.getGroupDetails(controller.groups[index]);
+                  controller.groupIdToAddUser = controller.groups[index].id;
                 },
                 child: Container(
                   padding: const EdgeInsets.all(15),
@@ -47,13 +48,13 @@ class GroupsScreen extends StatelessWidget {
                           Text(
                             controller.groups[index].name,
                             style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                                  fontSize: 15,
+                                  fontSize: 14,
                                   height: 1.1,
                                   color: AppLightColor.subHeadingColor,
                                 ),
                           ),
                           vertical(8),
-                          Text('تاريخ الإنشاء: ${dateString}', style: Theme.of(context).textTheme.labelMedium!.copyWith(height: 1)),
+                          Text('تاريخ الإنشاء: ${dateString}', style: Theme.of(context).textTheme.labelMedium!.copyWith(height: 1, fontSize: 11)),
                         ],
                       ),
                       Row(

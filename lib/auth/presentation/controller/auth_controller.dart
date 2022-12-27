@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:jdolh_flutter/account/presentation/screens/account_screen.dart';
 import 'package:jdolh_flutter/auth/domain/entities/auth_result.dart';
 import 'package:jdolh_flutter/auth/domain/entities/user_exist.dart';
 import 'package:jdolh_flutter/auth/domain/usecases/local_auth_usecases.dart';
@@ -51,7 +52,7 @@ class AuthController extends GetxController {
       localAuthUsecases.writeIsLogin(true);
       localAuthUsecases.writeUserId(authResult.userId);
       localAuthUsecases.writeToken(authResult.token);
-      Get.offAll(() => DashboardScreen());
+      Get.offAll(() => AccountScreen());
     });
   }
 

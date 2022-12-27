@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:jdolh_flutter/account/presentation/components/confirm_remove.dart';
+import 'package:jdolh_flutter/account/presentation/components/users_add_to_group.dart';
 import 'package:jdolh_flutter/account/presentation/controller/account_controller.dart';
 import 'package:jdolh_flutter/core/utils/app_light_color.dart';
 import 'package:jdolh_flutter/core/utils/global_utils.dart';
@@ -107,26 +108,33 @@ class GroupDetailsScreen extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text('أعضاء المجموعة', style: Theme.of(context).textTheme.titleMedium),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                    decoration: BoxDecoration(
-                                      color: AppLightColor.primaryColor,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Icon(Ionicons.person_add, color: Colors.white, size: 15),
-                                        horizontal(5),
-                                        Text(
-                                          'أضف عضو',
-                                          style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                                                fontSize: 12,
-                                                color: Colors.white,
-                                                height: 1.7,
-                                              ),
-                                        )
-                                      ],
+                                  InkWell(
+                                    onTap: () {
+                                      controller.filterMemberToAddToGroup();
+                                      controller.userIdToAddToGroup = 0;
+                                      Get.to(() => UsersAddToGroup());
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                      decoration: BoxDecoration(
+                                        color: AppLightColor.primaryColor,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Ionicons.person_add, color: Colors.white, size: 15),
+                                          horizontal(5),
+                                          Text(
+                                            'أضف عضو',
+                                            style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                                                  fontSize: 12,
+                                                  color: Colors.white,
+                                                  height: 1.7,
+                                                ),
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],
