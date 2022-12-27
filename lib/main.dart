@@ -9,12 +9,12 @@ import 'package:jdolh_flutter/auth/presentation/screens/signin_screen.dart';
 import 'package:jdolh_flutter/core/services/service_locator.dart';
 import 'package:jdolh_flutter/core/utils/app_light_color.dart';
 import 'package:jdolh_flutter/core/utils/theme.dart';
-import 'package:jdolh_flutter/dashboard/presentation/screens/dashboard_screen.dart';
 import 'package:jdolh_flutter/firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
+    name: 'jdolhfirebase',
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await GetStorage.init();
@@ -25,7 +25,8 @@ void main() async {
 ///// App /////z
 class App extends StatelessWidget {
   App({super.key});
-  final AuthController authController = Get.put(AuthController(sl(), sl(), sl(), sl()));
+  final AuthController authController =
+      Get.put(AuthController(sl(), sl(), sl(), sl()));
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +38,9 @@ class App extends StatelessWidget {
     );
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: authController.localAuthUsecases.readIsLogin() != true ? SigninScreen() : AccountScreen(),
+      home: authController.localAuthUsecases.readIsLogin() != true
+          ? SigninScreen()
+          : AccountScreen(),
       theme: lightTheme,
       locale: const Locale("ar"),
       fallbackLocale: const Locale("ar"),

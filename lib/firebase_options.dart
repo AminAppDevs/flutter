@@ -26,10 +26,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -53,10 +50,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBfIeMzSsi8lXlh9wu-dI96fG1XsWSpa0s',
-    appId: '1:602642469151:android:9dc26d7b54ef955d89202a',
-    messagingSenderId: '602642469151',
-    projectId: 'jdolh-app',
-    storageBucket: 'jdolh-app.appspot.com',
+    apiKey: 'AIzaSyAZPS-ecpBVsOhOJBHorV5EerN2CmQyeXg',
+    appId: '1:62567925414:android:9cbed8af2c23aad4089667',
+    messagingSenderId: '62567925414',
+    projectId: 'jdolh-app-369618',
+    storageBucket: 'jdolh-app-369618.appspot.com',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyDbkPnpYgFJtyjy-tR5OU7qpTgUrcQyvc0',
+    appId: '1:62567925414:ios:d6148d7899abead3089667',
+    messagingSenderId: '62567925414',
+    projectId: 'jdolh-app-369618',
+    storageBucket: 'jdolh-app-369618.appspot.com',
+    iosClientId: '62567925414-huopg32ne56vb1dhlsgilii6nuopfvq1.apps.googleusercontent.com',
+    iosBundleId: 'com.app.jdolh.sa',
   );
 }

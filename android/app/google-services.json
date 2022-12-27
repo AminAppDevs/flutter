@@ -1,41 +1,34 @@
 {
   "project_info": {
-    "project_number": "602642469151",
-    "project_id": "jdolh-app",
-    "storage_bucket": "jdolh-app.appspot.com"
+    "project_number": "62567925414",
+    "project_id": "jdolh-app-369618",
+    "storage_bucket": "jdolh-app-369618.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:602642469151:android:9dc26d7b54ef955d89202a",
+        "mobilesdk_app_id": "1:62567925414:android:9cbed8af2c23aad4089667",
         "android_client_info": {
           "package_name": "com.app.jdolh.sa"
         }
       },
       "oauth_client": [
         {
-          "client_id": "602642469151-aagd7sr03edo2hcmfnnathiea26cr15l.apps.googleusercontent.com",
+          "client_id": "62567925414-0ft5m39uempmc2oeqdjto9m8htnt9tub.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBfIeMzSsi8lXlh9wu-dI96fG1XsWSpa0s"
+          "current_key": "AIzaSyAZPS-ecpBVsOhOJBHorV5EerN2CmQyeXg"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "602642469151-aagd7sr03edo2hcmfnnathiea26cr15l.apps.googleusercontent.com",
+              "client_id": "62567925414-0ft5m39uempmc2oeqdjto9m8htnt9tub.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "602642469151-6e5ujp87ads549jits824qsapmhm6fdg.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.jdolhFlutter"
-              }
             }
           ]
         }
