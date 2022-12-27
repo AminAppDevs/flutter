@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:jdolh_flutter/account/presentation/screens/account_screen.dart';
 import 'package:jdolh_flutter/auth/presentation/controller/auth_controller.dart';
 import 'package:jdolh_flutter/auth/presentation/screens/signin_screen.dart';
 import 'package:jdolh_flutter/core/services/service_locator.dart';
@@ -15,7 +14,6 @@ import 'package:jdolh_flutter/firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    name: 'jdolhfirebase',
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await GetStorage.init();
@@ -23,7 +21,7 @@ void main() async {
   runApp(App());
 }
 
-///// App /////z
+///// App /////
 class App extends StatelessWidget {
   App({super.key});
   final AuthController authController = Get.put(AuthController(sl(), sl(), sl(), sl()));
