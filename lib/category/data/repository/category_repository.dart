@@ -1,4 +1,5 @@
 import 'package:jdolh_flutter/category/data/datasource/base_remote_category_datasource.dart';
+import 'package:jdolh_flutter/category/domain/entities/category_slide.dart';
 import 'package:jdolh_flutter/category/domain/entities/store.dart';
 import 'package:jdolh_flutter/category/domain/entities/category.dart';
 import 'package:dartz/dartz.dart';
@@ -35,6 +36,16 @@ class CategoryRepository extends BaseCategoryRepository {
   @override
   Future<Either<Failure, List<Store>>> getStoresOfCategory(int categoryId) async {
     final result = await baseRemoteCategoryDatasource.getStoresOfCategory(categoryId);
+    try {
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.serverErrorModel.message, e.serverErrorModel.statusCode));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<CategorySlide>>> getCategorySlides() async {
+    final result = await baseRemoteCategoryDatasource.getStoreCategorySlide();
     try {
       return Right(result);
     } on ServerException catch (e) {

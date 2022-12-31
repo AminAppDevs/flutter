@@ -24,4 +24,8 @@ class ApiConfig {
   static const String getParentCategories = '/store/store_category/all';
   static const String getSubCategories = '/store/store_category/subcategories';
   static const String getStoresOfCategories = '/store/stores_of_category';
+  static const String getStoreCategorySlides = '/store/stores_of_category/slides/all';
+
+  ///// store /////
+  static const String getStoreDetails = '/store/details';
 }

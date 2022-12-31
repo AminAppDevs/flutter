@@ -17,8 +17,14 @@ import 'package:jdolh_flutter/category/data/datasource/remote_category_datasourc
 import 'package:jdolh_flutter/category/data/repository/category_repository.dart';
 import 'package:jdolh_flutter/category/domain/repository/base_category_repository.dart';
 import 'package:jdolh_flutter/category/domain/usecases/get_parent_categories_usecase.dart';
+import 'package:jdolh_flutter/category/domain/usecases/get_store_category_slide_usecase.dart';
 import 'package:jdolh_flutter/category/domain/usecases/get_stores_of_category_usecase.dart';
 import 'package:jdolh_flutter/category/domain/usecases/get_subcategories_usecase.dart';
+import 'package:jdolh_flutter/store/data/datasource/base_remote_store_datasource.dart';
+import 'package:jdolh_flutter/store/data/datasource/remote_store_datasource.dart';
+import 'package:jdolh_flutter/store/data/repository/store_repository.dart';
+import 'package:jdolh_flutter/store/domain/repository/base_store_repository.dart';
+import 'package:jdolh_flutter/store/domain/usecases/get_store_details_usecase.dart';
 
 final sl = GetIt.instance;
 
@@ -57,5 +63,11 @@ class ServiceLocator {
     sl.registerLazySingleton(() => GetParentCategoriesUsecase(sl()));
     sl.registerLazySingleton(() => GetSubCategoriesUsecase(sl()));
     sl.registerLazySingleton(() => GetStoresOfCategoryUsecase(sl()));
+    sl.registerLazySingleton(() => GetStoreCategorySlidesUsecase(sl()));
+
+    // store
+    sl.registerLazySingleton<BaseRemoteStoreDatasource>(() => RemoteStoreDatasource());
+    sl.registerLazySingleton<BaseStoreRepository>(() => StoreRepository(sl()));
+    sl.registerLazySingleton(() => GetStoreDetailsUsecase(sl()));
   }
 }

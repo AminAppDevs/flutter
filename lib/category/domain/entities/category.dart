@@ -6,7 +6,8 @@ class Category extends Equatable {
   final String name;
   final AppImage icon;
   final AppImage banner;
-  const Category(this.id, this.name, this.icon, this.banner);
+  final List<Category> subCategories;
+  const Category(this.id, this.name, this.icon, this.banner, this.subCategories);
 
   @override
   List<Object?> get props => [id, name, icon, banner];

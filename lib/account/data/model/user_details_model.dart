@@ -1,6 +1,7 @@
 import 'package:jdolh_flutter/account/data/model/image_model.dart';
 import 'package:jdolh_flutter/account/data/model/user_details_count_model.dart';
 import 'package:jdolh_flutter/account/domain/entities/user_details.dart';
+import 'package:jdolh_flutter/core/utils/image_placeholder.dart';
 
 class UserDetailsModel extends UserDetails {
   const UserDetailsModel(super.id, super.fullName, super.phoneNumber, super.count, super.avatar);
@@ -10,11 +11,6 @@ class UserDetailsModel extends UserDetails {
         json['fullName'],
         json['phoneNumber'],
         UserDetailsCountModel.fromJson(json['_count']),
-        ImageModel.fromJson(json['avatar'] ??
-            {
-              "id": 0,
-              "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
-              "imageKey": "abdullah altamimi Cropped.jpg1669749178213"
-            }),
+        ImageModel.fromJson(json['avatar'] ?? ImagePlaceholder.userAvatar),
       );
 }
