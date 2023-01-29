@@ -11,7 +11,7 @@ import 'package:jdolh_flutter/store/presentation/controller/store_controller.dar
 class CategoryScreen extends StatelessWidget {
   CategoryScreen({super.key});
   final CategoryController categoryController = Get.put(CategoryController(sl(), sl(), sl(), sl()));
-  final StoreController storeController = Get.put(StoreController(sl()));
+  final StoreController storeController = Get.put(StoreController(sl(), sl(), sl()));
 
   @override
   Widget build(BuildContext context) {

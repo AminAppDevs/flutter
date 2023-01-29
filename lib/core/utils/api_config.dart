@@ -28,4 +28,8 @@ class ApiConfig {
 
   ///// store /////
   static const String getStoreDetails = '/store/details';
+
+  ///// product /////
+  static const String getStoreProductCategories = '/products/product_category/store_categories';
+  static const String getStoreProductDetails = '/products/store_product';
 }

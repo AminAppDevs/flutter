@@ -24,7 +24,9 @@ import 'package:jdolh_flutter/store/data/datasource/base_remote_store_datasource
 import 'package:jdolh_flutter/store/data/datasource/remote_store_datasource.dart';
 import 'package:jdolh_flutter/store/data/repository/store_repository.dart';
 import 'package:jdolh_flutter/store/domain/repository/base_store_repository.dart';
+import 'package:jdolh_flutter/store/domain/usecases/get_product_details_usecase.dart';
 import 'package:jdolh_flutter/store/domain/usecases/get_store_details_usecase.dart';
+import 'package:jdolh_flutter/store/domain/usecases/get_store_product_categories_usecase.dart';
 
 final sl = GetIt.instance;
 
@@ -69,5 +71,7 @@ class ServiceLocator {
     sl.registerLazySingleton<BaseRemoteStoreDatasource>(() => RemoteStoreDatasource());
     sl.registerLazySingleton<BaseStoreRepository>(() => StoreRepository(sl()));
     sl.registerLazySingleton(() => GetStoreDetailsUsecase(sl()));
+    sl.registerLazySingleton(() => GetStoreProductCategoryUsecase(sl()));
+    sl.registerLazySingleton(() => GetProductDetailsUsecase(sl()));
   }
 }
