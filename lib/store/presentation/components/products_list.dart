@@ -24,7 +24,7 @@ class ProductsList extends StatelessWidget {
           return InkWell(
             onTap: () {
               storeController.getProductDetails(productCategory.products[index].id);
-              Get.to(() => ProductDetailsScreen());
+              Get.to(ProductDetailsScreen());
             },
             child: Container(
               decoration: BoxDecoration(

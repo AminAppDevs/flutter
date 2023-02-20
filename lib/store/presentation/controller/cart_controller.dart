@@ -1,76 +1,115 @@
 import 'package:get/get.dart';
+import 'package:uuid/uuid.dart';
 
 class CartController extends GetxController {
   List<CartItem> cart = [];
-  List<OptionItem> optionItems = [];
-  List<Map> selectedRadios = [];
+  List<CartSelectOption> cartSelectOptions = [];
+  double totalPrice = 0;
 
-  /// add simple item to cart
-  addSimpleItemToCart({required int productId, required String productName, required double amount, required int quantity}) {
-    SimpleCartItem item = SimpleCartItem(productId, productName, amount, quantity);
-    cart.add(item);
-    update();
-    print(cart);
-  }
-
-  /// add option item to list
-  addOptionItemToList(
-      {required int optionId,
-      required bool isSelect,
-      required String optionName,
-      required String optionItemName,
-      required double amount,
-      required int optionItemId}) {
-    OptionItem optionItem = OptionItem(optionId, isSelect, optionName, optionItemName, amount, optionItemId);
-    if (isSelect) {
-      var item = optionItems.firstWhereOrNull((element) => element.optionId == optionId);
-      if (item == null) {
-        List<OptionItem> newOptionsItem = [...optionItems, optionItem];
-        optionItems = newOptionsItem;
+  /// add to cart
+  void addToCart({required int id, required String name, required double price, required int quantity, required bool isSimple}) {
+    var uuid = Uuid();
+    if (isSimple) {
+      cart.add(CartItem(options: [], id: id, name: name, price: price, quantity: quantity, uuid: uuid.v4()));
+      update();
+      print(cart);
+    } else {
+      if (cart.where((element) => element.id == id).toList().isEmpty) {
+        cart.add(CartItem(options: cartSelectOptions, id: id, name: name, price: price, quantity: quantity, uuid: uuid.v4()));
         update();
+        print(cart);
       } else {
-        optionItems.removeWhere((element) => element.optionId == optionId);
-        List<OptionItem> newOptionsItem = [...optionItems, optionItem];
-        optionItems = newOptionsItem;
-        update();
+        print('المنتج موجود مسبقاً في السلة');
       }
     }
-    update();
-    print(optionItems);
   }
 
-  /// add variable item to cart
-  addVariableItemToCart({required int productId, required String productName}) {
-    VariableCartProduct item = VariableCartProduct(productId, productName, optionItems);
-    cart.add(item);
+  /// add cart selected option
+  void addCartSelectOption(CartSelectOption cartSelectOption) {
+    List<CartSelectOption> selectedItem = cartSelectOptions.where((element) => element.optionId == cartSelectOption.optionId).toList();
+    if (selectedItem.isEmpty) {
+      cartSelectOptions.add(cartSelectOption);
+      update();
+    } else {
+      cartSelectOptions.removeWhere((element) => element.optionId == cartSelectOption.optionId);
+      cartSelectOptions.add(cartSelectOption);
+      update();
+    }
+  }
+
+  /// calculate variable product price
+  getOptionsTotalPrice(int cartItemId) {
+    double total = cartSelectOptions.fold(0, (previousValue, element) => previousValue + element.price);
+    totalPrice = total;
     update();
-    print(cart);
+    print(total);
+  }
+
+  /// calculate cart total
+
+  void removeFromCart(CartItem item) {
+    cart.remove(item);
+    update();
+  }
+
+  void incrementItemQty(CartItem item) {
+    item.quantity++;
+    update();
+  }
+
+  void decrementItemQty(CartItem item) {
+    item.quantity--;
+    update();
+  }
+
+  // void incrementOptionQty(VariableCartItem item, CartSelectOption option) {
+  //   option.quantity++;
+  //   update();
+  // }
+
+  // void decrementOptionQty(VariableCartItem item, CartSelectOption option) {
+  //   option.quantity--;
+  //   update();
+  // }
+}
+
+class CartItem {
+  final int id;
+  final String name;
+  final double price;
+  final String uuid;
+  List<CartSelectOption> options = [];
+  int quantity;
+
+  CartItem({
+    required this.uuid,
+    required this.options,
+    required this.id,
+    required this.name,
+    required this.price,
+    required this.quantity,
+  });
+
+  @override
+  toString() {
+    return 'id: $id, name: $name, price: $price, options: ${options.length}';
   }
 }
 
-abstract class CartItem {
-  const CartItem(this.productId, this.productName);
-  final int? productId;
-  final String? productName;
-}
-
-class SimpleCartItem extends CartItem {
-  const SimpleCartItem(super.productId, super.productName, this.amount, this.quantity);
-  final double? amount;
-  final int? quantity;
-}
-
-class VariableCartProduct extends CartItem {
-  const VariableCartProduct(super.productId, super.productName, this.optionItems);
-  final List<OptionItem> optionItems;
-}
-
-class OptionItem {
-  const OptionItem(this.optionId, this.isSelect, this.optionName, this.optionItemName, this.amount, this.optionItemId);
+class CartSelectOption {
+  final int id;
   final int optionId;
-  final int optionItemId;
-  final bool isSelect;
-  final String optionName;
-  final String optionItemName;
-  final double amount;
+  final String title;
+  final String name;
+  final double price;
+  int quantity;
+
+  CartSelectOption({
+    required this.title,
+    required this.optionId,
+    required this.id,
+    required this.name,
+    required this.price,
+    required this.quantity,
+  });
 }

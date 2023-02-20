@@ -32,4 +32,7 @@ class ApiConfig {
   ///// product /////
   static const String getStoreProductCategories = '/products/product_category/store_categories';
   static const String getStoreProductDetails = '/products/store_product';
+
+  ///// booking /////
+  static const String getBranchReservationDays = '/store_branches/get_days';
 }

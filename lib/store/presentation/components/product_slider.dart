@@ -10,7 +10,7 @@ CarouselSlider productSlider(StoreController storeController) => CarouselSlider.
       itemBuilder: (context, index, realIndex) {
         return CachedNetworkImage(
           imageUrl: storeController.productDetails!.images[index].imageUrl,
-          placeholder: (context, url) => ShimmerEffect.shimmerBox(width: double.infinity, height: 170, borderRaduis: 0),
+          placeholder: (context, url) => ShimmerEffect.shimmerBox(width: double.infinity, height: 200, borderRaduis: 0),
           errorWidget: (context, url, error) => Icon(Icons.error),
           imageBuilder: (context, imageProvider) => Container(
             decoration: BoxDecoration(
@@ -25,9 +25,9 @@ CarouselSlider productSlider(StoreController storeController) => CarouselSlider.
         );
       },
       options: CarouselOptions(
-        height: 170,
+        height: 200,
         viewportFraction: 1,
-        autoPlay: true,
+        autoPlay: false,
         autoPlayInterval: const Duration(seconds: 4),
         autoPlayAnimationDuration: const Duration(milliseconds: 600),
         autoPlayCurve: Curves.easeIn,

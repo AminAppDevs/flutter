@@ -12,6 +12,11 @@ import 'package:jdolh_flutter/auth/domain/usecases/local_auth_usecases.dart';
 import 'package:jdolh_flutter/auth/domain/usecases/login_usecase.dart';
 import 'package:jdolh_flutter/auth/domain/usecases/register_usecase.dart';
 import 'package:jdolh_flutter/auth/domain/usecases/user_exist_usecase.dart';
+import 'package:jdolh_flutter/booking/data/datasource/base_remote_booking_datasource.dart';
+import 'package:jdolh_flutter/booking/data/datasource/remote_booking_datasource.dart';
+import 'package:jdolh_flutter/booking/data/repository/booking_repository.dart';
+import 'package:jdolh_flutter/booking/domain/repository/base_booking_repository.dart';
+import 'package:jdolh_flutter/booking/domain/usecases/get_branch_reservation_days_usecase.dart';
 import 'package:jdolh_flutter/category/data/datasource/base_remote_category_datasource.dart';
 import 'package:jdolh_flutter/category/data/datasource/remote_category_datasource.dart';
 import 'package:jdolh_flutter/category/data/repository/category_repository.dart';
@@ -73,5 +78,10 @@ class ServiceLocator {
     sl.registerLazySingleton(() => GetStoreDetailsUsecase(sl()));
     sl.registerLazySingleton(() => GetStoreProductCategoryUsecase(sl()));
     sl.registerLazySingleton(() => GetProductDetailsUsecase(sl()));
+
+    /// booking
+    sl.registerLazySingleton<BaseRemoteBookingDatasource>(() => RemoteBookingDatasource());
+    sl.registerLazySingleton<BaseBookingRepository>(() => BookingRepository(sl()));
+    sl.registerLazySingleton(() => GetBranchReservationDaysUsecase(sl()));
   }
 }
