@@ -36,7 +36,7 @@ class StoreProductMenu extends StatelessWidget {
               indicatorColor: AppLightColor.primaryColor,
               unselectedLabelColor: Colors.white,
               labelColor: AppLightColor.primaryColor,
-              labelStyle: TextStyle(fontSize: 12, fontFamily: 'Changa'),
+              labelStyle: TextStyle(fontSize: 12, fontFamily: 'Cairo'),
               padding: EdgeInsets.symmetric(horizontal: 10),
               indicatorPadding: EdgeInsets.zero,
               labelPadding: EdgeInsets.symmetric(horizontal: 7),

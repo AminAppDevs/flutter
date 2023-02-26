@@ -1,8 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hexcolor/hexcolor.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:jdolh_flutter/core/utils/app_light_color.dart';
+import 'package:jdolh_flutter/core/utils/global_utils.dart';
 import 'package:jdolh_flutter/core/utils/shimmer_effect.dart';
 import 'package:jdolh_flutter/store/domain/entities/product_category.dart';
 import 'package:jdolh_flutter/store/presentation/controller/store_controller.dart';
@@ -16,7 +17,7 @@ class ProductsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       child: ListView.builder(
         shrinkWrap: true,
         itemCount: productCategory.products.length,
@@ -27,56 +28,74 @@ class ProductsList extends StatelessWidget {
               Get.to(ProductDetailsScreen());
             },
             child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
               decoration: BoxDecoration(
                 color: Colors.white,
-                border: Border.all(color: HexColor('eeeeee')),
-                borderRadius: BorderRadius.circular(10),
+                border: Border(bottom: BorderSide(color: Colors.grey.shade100)),
               ),
-              child: Column(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  if (productCategory.products[index].images.isNotEmpty)
-                    CachedNetworkImage(
-                      imageUrl: productCategory.products[index].images[0].imageUrl,
-                      placeholder: (context, url) => ShimmerEffect.shimmerBox(width: double.infinity, height: 160, borderRaduis: 10),
-                      errorWidget: (context, url, error) => Icon(Icons.error),
-                      imageBuilder: (context, imageProvider) => Container(
-                        width: double.infinity,
-                        height: 160,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-                          border: Border.all(color: Colors.white.withOpacity(.3), width: 2, strokeAlign: StrokeAlign.outside),
-                          color: Colors.grey.shade200,
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    ),
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           productCategory.products[index].name,
                           style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
                             color: AppLightColor.headingColor,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            height: 1,
                           ),
                         ),
+                        vertical(3),
                         Text(
-                          '25 ريال',
+                          productCategory.products[index].description,
+                          maxLines: 2,
                           style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: AppLightColor.primaryColor,
+                            color: AppLightColor.labelColor,
+                            fontSize: 12,
+                            height: 1.5,
                           ),
+                        ),
+                        vertical(7),
+                        Row(
+                          children: [
+                            Icon(Ionicons.pricetags, size: 13, color: AppLightColor.primaryColor),
+                            horizontal(5),
+                            Text(
+                              '${productCategory.products[index].regularPrice > 0 ? '${productCategory.products[index].regularPrice} ريال' : 'خيارات متعددة'}',
+                              style: TextStyle(
+                                color: AppLightColor.labelColor,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                height: 1.5,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
                   ),
+                  horizontal(10),
+                  if (productCategory.products[index].images.isNotEmpty)
+                    CachedNetworkImage(
+                      imageUrl: productCategory.products[index].images[0].imageUrl,
+                      placeholder: (context, url) => ShimmerEffect.shimmerBox(width: 70, height: 70, borderRaduis: 10),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                      imageBuilder: (context, imageProvider) => Container(
+                        width: 70,
+                        height: 70,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),

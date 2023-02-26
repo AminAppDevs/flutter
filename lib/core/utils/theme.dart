@@ -5,7 +5,7 @@ import 'app_light_color.dart';
 
 ThemeData lightTheme = ThemeData(
   brightness: Brightness.light,
-  fontFamily: 'Changa',
+  fontFamily: 'Cairo',
 
   scaffoldBackgroundColor: Colors.white,
 
@@ -15,7 +15,7 @@ ThemeData lightTheme = ThemeData(
       backgroundColor: AppLightColor.secondaryColor,
       systemOverlayStyle: SystemUiOverlayStyle.light,
       titleTextStyle: const TextStyle(
-        fontFamily: 'Changa',
+        fontFamily: 'Cairo',
         fontWeight: FontWeight.w500,
         fontSize: 16,
       )),
@@ -154,7 +154,7 @@ ThemeData lightTheme = ThemeData(
         const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w600,
-          fontFamily: 'Changa',
+          fontFamily: 'Cairo',
         ),
       ),
     ),
@@ -178,7 +178,7 @@ ThemeData lightTheme = ThemeData(
         const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w600,
-          fontFamily: 'Changa',
+          fontFamily: 'Cairo',
         ),
       ),
     ),

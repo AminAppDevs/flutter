@@ -97,7 +97,8 @@ Container categoryStores(CategoryController controller, BuildContext context, St
                                               height: 45,
                                               decoration: BoxDecoration(
                                                 borderRadius: BorderRadius.circular(10),
-                                                border: Border.all(color: Colors.white.withOpacity(.3), width: 1, strokeAlign: StrokeAlign.outside),
+                                                border: Border.all(
+                                                    color: Colors.white.withOpacity(.3), width: 1, strokeAlign: BorderSide.strokeAlignOutside),
                                                 color: Colors.grey.shade200,
                                                 image: DecorationImage(
                                                   image: imageProvider,

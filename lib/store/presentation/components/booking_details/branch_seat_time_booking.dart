@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:jdolh_flutter/booking/view/controllers/booking_controller.dart';
+import 'package:jdolh_flutter/booking/view/screens/select_booking_date_screen.dart';
 import 'package:jdolh_flutter/core/utils/app_light_color.dart';
 import 'package:jdolh_flutter/core/utils/global_utils.dart';
+import 'package:jdolh_flutter/core/utils/snackbar.dart';
 import 'package:jdolh_flutter/store/presentation/components/booking_details/branches_bottom_sheet.dart';
 import 'package:jdolh_flutter/store/presentation/controller/booking_details_controller.dart';
 import 'package:jdolh_flutter/store/presentation/controller/store_controller.dart';
@@ -12,6 +15,7 @@ Column branchSeatTimeBooking({
   required BookingDetailsController bookingDetailsController,
   required StoreController storeController,
   required TextEditingController seatNumberController,
+  required BookingController bookingController,
 }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -129,7 +133,14 @@ Column branchSeatTimeBooking({
       GetBuilder<BookingDetailsController>(
         builder: (controller) {
           return InkWell(
-            onTap: () {},
+            onTap: () {
+              if (bookingDetailsController.selectedBranchId != 0) {
+                Get.to(SelectBookingDateScreen());
+                bookingController.getBranchReservationDays(bookingDetailsController.selectedBranchId);
+              } else {
+                AppSnackbar.errorSnackbar(message: 'الرجاء اختيار الفرع');
+              }
+            },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 13),
               height: 50,

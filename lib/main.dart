@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:jdolh_flutter/auth/presentation/controller/auth_controller.dart';
@@ -10,6 +11,7 @@ import 'package:jdolh_flutter/core/utils/app_light_color.dart';
 import 'package:jdolh_flutter/core/utils/theme.dart';
 import 'package:jdolh_flutter/dashboard/presentation/screens/dashboard_screen.dart';
 import 'package:jdolh_flutter/firebase_options.dart';
+import 'package:syncfusion_localizations/syncfusion_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,6 +42,15 @@ class App extends StatelessWidget {
       theme: lightTheme,
       locale: const Locale("ar"),
       fallbackLocale: const Locale("ar"),
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        SfGlobalLocalizations.delegate
+      ],
+      supportedLocales: [
+        Locale('ar'),
+      ],
     );
   }
 }

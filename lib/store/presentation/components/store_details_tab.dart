@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jdolh_flutter/core/utils/app_light_color.dart';
-import 'package:jdolh_flutter/store/presentation/components/booking_details_menu.dart';
+import 'package:jdolh_flutter/store/presentation/components/booking_details/booking_details_menu.dart';
 import 'package:jdolh_flutter/store/presentation/components/store_details_cover.dart';
 import 'package:jdolh_flutter/store/presentation/components/store_details_tabs_delgate.dart';
 import 'package:jdolh_flutter/store/presentation/components/store_products_menu.dart';

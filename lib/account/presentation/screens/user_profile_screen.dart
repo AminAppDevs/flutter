@@ -48,7 +48,7 @@ class UserProfileScreen extends StatelessWidget {
                                   height: 80,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(100),
-                                    border: Border.all(color: AppLightColor.inputBgColor, width: 3, strokeAlign: StrokeAlign.outside),
+                                    border: Border.all(color: AppLightColor.inputBgColor, width: 3, strokeAlign: BorderSide.strokeAlignOutside),
                                     color: Colors.grey.shade200,
                                     image: DecorationImage(
                                       image: imageProvider,
