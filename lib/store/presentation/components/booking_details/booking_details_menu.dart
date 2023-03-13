@@ -14,7 +14,7 @@ class BookingDetailsMenu extends StatelessWidget {
   final CartController cartController = Get.put(CartController());
   final BookingDetailsController bookingDetailsController = Get.put(BookingDetailsController());
   final TextEditingController seatNumberController = TextEditingController();
-  final BookingController bookingController = Get.put(BookingController(sl(), sl()));
+  final BookingController bookingController = Get.put(BookingController(sl(), sl(), sl()));
   final bookingDetailsFormKey = GlobalKey<FormState>();
 
   @override

@@ -1,10 +1,14 @@
+import 'dart:async';
+
 import 'package:dartz/dartz.dart';
 import 'package:get/get.dart';
 import 'package:jdolh_flutter/auth/data/datasource/local_auth_datasource.dart';
 import 'package:jdolh_flutter/booking/data/model/create_booking_model.dart';
+import 'package:jdolh_flutter/booking/domain/entities/branch_booking.dart';
 import 'package:jdolh_flutter/booking/domain/entities/branch_reservation_day.dart';
 import 'package:jdolh_flutter/booking/domain/entities/create_booking.dart';
 import 'package:jdolh_flutter/booking/domain/usecases/create_booking_usecase.dart';
+import 'package:jdolh_flutter/booking/domain/usecases/get_branch_bookings_by_dates_usecase.dart';
 import 'package:jdolh_flutter/booking/domain/usecases/get_branch_reservation_days_usecase.dart';
 import 'package:jdolh_flutter/core/error/failure.dart';
 import 'package:jdolh_flutter/store/presentation/controller/cart_controller.dart';
@@ -12,15 +16,19 @@ import 'package:jdolh_flutter/store/presentation/controller/cart_controller.dart
 class BookingController extends GetxController {
   final GetBranchReservationDaysUsecase getBranchReservationDaysUsecase;
   final CreateBookingUsecase createBookingUsecase;
-  BookingController(this.getBranchReservationDaysUsecase, this.createBookingUsecase);
+  final GetBranchBookingByDatesUsecase getBranchBookingByDatesUsecase;
+  BookingController(this.getBranchReservationDaysUsecase, this.createBookingUsecase, this.getBranchBookingByDatesUsecase);
 
   List<BranchReservationDay> branchReservationDays = [];
+  List<BranchBookingByDate> branchBookingsByDates = [];
+  bool isGetBranchBookingsByDates = false;
   BranchReservationDay? selectedBranchReservationDay;
   int selectedimeId = 0;
   bool isGetBranchReservationDaysLoading = false;
   DateTime selectedCalenderDay = DateTime.now();
   Map<String, List> events = {};
   bool isFeeStatusPaid = false;
+  Timer? timer;
 
   ///// change selected calender day
   changeSelectedCalenderDay(DateTime selectedDay) {
@@ -124,5 +132,28 @@ class BookingController extends GetxController {
           }).toList());
     }).toList();
     return items;
+  }
+
+  //// get branch bookings by date
+  getBranchBookingByDate(int branchId, String fromDate, String toDate) async {
+    timer = Timer.periodic(Duration(seconds: 5), (timer) async {
+      isGetBranchBookingsByDates = true;
+      update();
+      print(fromDate);
+      print(toDate);
+      Either<Failure, List<BranchBookingByDate>> result = await getBranchBookingByDatesUsecase(branchId, fromDate, toDate);
+      result.fold(
+        (Failure failure) {
+          isGetBranchBookingsByDates = false;
+          update();
+        },
+        (List<BranchBookingByDate> value) {
+          branchBookingsByDates = value;
+          isGetBranchBookingsByDates = false;
+          update();
+          print(value);
+        },
+      );
+    });
   }
 }

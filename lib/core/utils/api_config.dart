@@ -36,4 +36,5 @@ class ApiConfig {
   ///// booking /////
   static const String getBranchReservationDays = '/store_branches/get_days';
   static const String createBooking = '/bookings/create_booking';
+  static const String getBranchBookingsOfDates = '/bookings/get_between_two_dates_bookings';
 }

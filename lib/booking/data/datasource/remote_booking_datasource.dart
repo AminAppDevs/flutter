@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:jdolh_flutter/booking/data/datasource/base_remote_booking_datasource.dart';
+import 'package:jdolh_flutter/booking/data/model/branch_booking_by_date_model.dart';
 import 'package:jdolh_flutter/booking/data/model/branch_reservation_day_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:jdolh_flutter/booking/data/model/create_booking_model.dart';
@@ -31,9 +32,22 @@ class RemoteBookingDatasource extends BaseRemoteBookingDatasource {
       Uri.parse(url),
       body: jsonEncode(createBooking.toJson()),
     );
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       return CreateBookingResponseModel.fromJson(jsonDecode(response.body));
     } else {
+      throw ServerException(ServerErrorModel.fromJson(jsonDecode(response.body)));
+    }
+  }
+
+///// get branch booking by date
+  @override
+  Future<List<BranchBookingByDateModel>> getBranchBookingByDates(int branchId, String fromDate, String toDate) async {
+    final String url = '${ApiConfig.baseUrl}${ApiConfig.getBranchBookingsOfDates}/$branchId';
+    http.Response response = await http.post(Uri.parse(url), body: {"fromDate": fromDate, "toDate": toDate});
+    if (response.statusCode == 201) {
+      return (jsonDecode(response.body) as List).map((e) => BranchBookingByDateModel.fromJson(e)).toList();
+    } else {
+      print(response.body);
       throw ServerException(ServerErrorModel.fromJson(jsonDecode(response.body)));
     }
   }

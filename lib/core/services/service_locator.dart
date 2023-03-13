@@ -17,6 +17,7 @@ import 'package:jdolh_flutter/booking/data/datasource/remote_booking_datasource.
 import 'package:jdolh_flutter/booking/data/repository/booking_repository.dart';
 import 'package:jdolh_flutter/booking/domain/repository/base_booking_repository.dart';
 import 'package:jdolh_flutter/booking/domain/usecases/create_booking_usecase.dart';
+import 'package:jdolh_flutter/booking/domain/usecases/get_branch_bookings_by_dates_usecase.dart';
 import 'package:jdolh_flutter/booking/domain/usecases/get_branch_reservation_days_usecase.dart';
 import 'package:jdolh_flutter/category/data/datasource/base_remote_category_datasource.dart';
 import 'package:jdolh_flutter/category/data/datasource/remote_category_datasource.dart';
@@ -85,5 +86,6 @@ class ServiceLocator {
     sl.registerLazySingleton<BaseBookingRepository>(() => BookingRepository(sl()));
     sl.registerLazySingleton(() => GetBranchReservationDaysUsecase(sl()));
     sl.registerLazySingleton(() => CreateBookingUsecase(sl()));
+    sl.registerLazySingleton(() => GetBranchBookingByDatesUsecase(sl()));
   }
 }

@@ -24,11 +24,18 @@ class StoreDetailsTab extends StatelessWidget {
                 TabBar(
                   indicator: BoxDecoration(color: AppLightColor.primaryColor),
                   tabs: [
-                    Tab(text: 'القائمة'),
+                    Tab(
+                      text: 'القائمة',
+                    ),
                     Tab(text: 'تفاصيل الحجز'),
                   ],
                   unselectedLabelColor: AppLightColor.headingColor,
                   labelColor: Colors.white,
+                  labelStyle: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Cairo',
+                  ),
                 ),
               ),
               floating: true,

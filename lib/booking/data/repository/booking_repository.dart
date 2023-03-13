@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:jdolh_flutter/booking/data/datasource/base_remote_booking_datasource.dart';
 import 'package:jdolh_flutter/booking/data/model/create_booking_model.dart';
+import 'package:jdolh_flutter/booking/domain/entities/branch_booking.dart';
 import 'package:jdolh_flutter/booking/domain/entities/branch_reservation_day.dart';
 import 'package:jdolh_flutter/booking/domain/entities/create_booking_response.dart';
 import 'package:jdolh_flutter/booking/domain/repository/base_booking_repository.dart';
@@ -26,6 +27,17 @@ class BookingRepository extends BaseBookingRepository {
   @override
   Future<Either<Failure, CreateBookingResponse>> createBooking(CreateBookingModel createBooking) async {
     final result = await baseRemoteBookingDatasource.createBooking(createBooking);
+    try {
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.serverErrorModel.message, e.serverErrorModel.statusCode));
+    }
+  }
+
+///// get branch booking by date
+  @override
+  Future<Either<Failure, List<BranchBookingByDate>>> getBranchBookingByDates(int branchId, String fromDate, String toDate) async {
+    final result = await baseRemoteBookingDatasource.getBranchBookingByDates(branchId, fromDate, toDate);
     try {
       return Right(result);
     } on ServerException catch (e) {
